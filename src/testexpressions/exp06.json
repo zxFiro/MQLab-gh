@@ -13,7 +13,7 @@
             "stepId": "0",
             "KCs":[],
             "expression": "\\left(a+b\\right)\\cdot c",
-            "stepTitle": "Escribe la siguiente expresion en el campo de entra.",
+            "stepTitle": "Escribe la siguiente expresion en el campo de entrada.",
             "displayResult": ["\\left(a+b\\right)\\cdot c"],
             "values":[{"name":"a","value":1},{"name":"b","value":4}],
             "hints": [

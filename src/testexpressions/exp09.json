@@ -13,7 +13,7 @@
             "stepId": "0",
             "KCs":[],
             "expression": "\\sqrt{a}",
-            "stepTitle": "Escribe la siguiente expresion en el campo de entra.",
+            "stepTitle": "Escribe la siguiente expresion en el campo de entrada.",
             "displayResult": ["\\sqrt{a}"],
             "values":[{"name":"a","value":1},{"name":"b","value":4}],
             "hints": [

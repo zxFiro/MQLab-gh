@@ -13,7 +13,7 @@
             "stepId": "0",
             "KCs":[],
             "expression": "0.5\\cdot10^{-4}\\cdot23\\cdot10^2",
-            "stepTitle": "Escribe la siguiente expresion en el campo de entra.",
+            "stepTitle": "Escribe la siguiente expresion en el campo de entrada.",
             "displayResult": ["0.5\\cdot10^{-4}\\cdot23\\cdot10^2"],
             "values":[{"name":"a","value":1},{"name":"b","value":4}],
             "hints": [

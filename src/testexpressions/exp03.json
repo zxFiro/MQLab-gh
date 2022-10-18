@@ -13,7 +13,7 @@
             "stepId": "0",
             "KCs":[],
             "expression": "a\\cdot b",
-            "stepTitle": "Escribe la siguiente expresion en el campo de entra.",
+            "stepTitle": "Escribe la siguiente expresion en el campo de entrada.",
             "displayResult": ["a\\cdot b"],
             "values":[{"name":"a","value":1},{"name":"b","value":4}],
             "hints": [

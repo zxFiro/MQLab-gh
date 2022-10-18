@@ -48,6 +48,7 @@ const MQPostfixparser = (MQinfixInput:string) => {
         for (let i=0; i<l; i++){
             if (alphabet.test(a[i])) {
                 literal=literal+a[i];
+                if(i==(l-1)) output=output+" "+literal;
             } else if (typeof reservedWords[literal]!="undefined") {
                 //if the literal word formed is a function push into operator stack
                 stack.push(literal);

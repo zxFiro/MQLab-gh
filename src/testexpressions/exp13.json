@@ -13,7 +13,7 @@
             "stepId": "0",
             "KCs":[],
             "expression": "\\frac{1}{\\sqrt{a}+\\sqrt{b}}",
-            "stepTitle": "Escribe la siguiente expresion en el campo de entra.",
+            "stepTitle": "Escribe la siguiente expresion en el campo de entrada.",
             "displayResult": ["\\frac{1}{\\sqrt{a}+\\sqrt{b}}"],
             "values":[{"name":"a","value":1},{"name":"b","value":4}],
             "hints": [
