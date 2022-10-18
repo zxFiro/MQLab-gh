@@ -1,0 +1,38 @@
+[
+    {
+        "itemId": "exp15",
+        "itemTitle": "expression for evaluation lab",
+        "KCs":[],
+        "level": "3",
+        "text": "",
+        "selectSteps":false,
+        "stepsQuantity":1,
+        "expression": "a^2\\cdot\\frac{\\sin\\left(\\frac{1}{2}\\right)}{\\cos\\left(\\frac{1}{2}\\right)}",
+        "steps": [
+          {
+            "stepId": "0",
+            "KCs":[],
+            "expression": "a^2\\cdot\\frac{\\sin\\left(\\frac{1}{2}\\right)}{\\cos\\left(\\frac{1}{2}\\right)}",
+            "stepTitle": "Escribe la siguiente expresion en el campo de entra.",
+            "displayResult": ["a^2\\cdot\\frac{\\sin\\left(\\frac{1}{2}\\right)}{\\cos\\left(\\frac{1}{2}\\right)}"],
+            "values":[{"name":"a","value":1},{"name":"b","value":4}],
+            "hints": [
+              { "hintId": 0, "hint": "" },
+              { "hintId": 1, "hint": "" },
+              { "hintId": 2, "hint": "" }
+            ],
+            "matchingError":[
+              {"error":["",""],"hintId":3,"hint": "algo"},
+              {"error":["","*"],"hintId":4,"hint": "algo"},
+              {"error":["*",""],"hintId":5,"hint": "algo"}
+            ],
+            "answers": [
+              { "answer": ["a^2\\cdot\\frac{\\sin\\left(\\frac{1}{2}\\right)}{\\cos\\left(\\frac{1}{2}\\right)}"], "nextStep": "-1" }
+            ],
+            "incorrectMsg": "Revisa que la expresion ingresada este correcta.",
+            "correctMsg": "Has logrado ingresar la expresion correctamente",
+            "summary": "expresion compleja"
+          }
+        ]
+      }
+]

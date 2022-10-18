@@ -1,0 +1,38 @@
+[
+    {
+        "itemId": "exp07",
+        "itemTitle": "expression for evaluation lab",
+        "KCs":[],
+        "level": "2",
+        "text": "",
+        "selectSteps":false,
+        "stepsQuantity":1,
+        "expression": "\\frac{c}{a+b}",
+        "steps": [
+          {
+            "stepId": "0",
+            "KCs":[],
+            "expression": "\\frac{c}{a+b}",
+            "stepTitle": "Escribe la siguiente expresion en el campo de entra.",
+            "displayResult": ["\\frac{c}{a+b}"],
+            "values":[{"name":"a","value":1},{"name":"b","value":4}],
+            "hints": [
+              { "hintId": 0, "hint": "" },
+              { "hintId": 1, "hint": "" },
+              { "hintId": 2, "hint": "" }
+            ],
+            "matchingError":[
+              {"error":["",""],"hintId":3,"hint": "algo"},
+              {"error":["","*"],"hintId":4,"hint": "algo"},
+              {"error":["*",""],"hintId":5,"hint": "algo"}
+            ],
+            "answers": [
+              { "answer": ["\\frac{c}{a+b}"], "nextStep": "-1" }
+            ],
+            "incorrectMsg": "Revisa que la expresion ingresada este correcta.",
+            "correctMsg": "Has logrado ingresar la expresion correctamente",
+            "summary": "expresion intermedia"
+          }
+        ]
+      }
+]
