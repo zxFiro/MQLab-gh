@@ -1,13 +1,24 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import ASCIIInput from '../components/ASCIIInput'
+import dynamic from "next/dynamic";
 import exp01 from "../testexpressions/exp01.json";
 const Home: inicio = ({steps}) => {
+  const Mq2 = dynamic(
+    () => {
+        return import("../components/Mq2");
+    },
+    { ssr: false }
+);
   return (
     <Flex height="100vh"  alignItems="center" justifyContent="center">
       <Flex direction="column" background="gray.100" p={12} rounded={6} w='100%' maxW='3xl' alignItems="center" justifyContent="center" margin={"auto"}>
         <ASCIIInput
           key={"1"}
+          step={steps.steps[0]}
+        />
+        <Mq2
+          key={"Mq2"}
           step={steps.steps[0]}
         />
       </Flex>
