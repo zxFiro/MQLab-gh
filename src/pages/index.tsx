@@ -1,50 +1,64 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex, Heading, Button,Box } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import ASCIIInput from '../components/ASCIIInput'
 import dynamic from "next/dynamic";
-import exp01 from "../testexpressions/exp01.json";
-const Home: inicio = ({steps}) => {
+import Expressions from '../components/Expressions';
+import { useState } from 'react';
+const Home: inicio = () => {
   const Mq2 = dynamic(
     () => {
         return import("../components/Mq2");
     },
     { ssr: false }
-);
+  );
+  
+  const shuffledList = () => {
+    let exprList = Expressions();
+    exprList= exprList.sort(function(){return 0.5 - Math.random()});
+    return exprList;
+  }
+  const [expL,setExpL]=useState(shuffledList());
+
+  const [expIndex,setExpIndex] = useState(parseInt("0"));
+
+  const expList = (mq2ev) => {
+    console.log(expL);
+    setExpIndex(expIndex+1);
+
+    if(mq2ev){
+      return (
+        <Mq2
+          key={"Mq2"}
+          step={expL[expIndex].steps[0]}
+        />
+      )
+    } else {
+      return (
+        <ASCIIInput
+          key={"1"}
+          step={expL[expIndex].steps[0]}
+        />
+      )
+    }
+    return (
+      <>nada</>
+    )
+  } 
+
+  const [isMq,setIsMq]=useState(true);
+  const [next,setNext]=useState(false);
+
   return (
     <Flex height="100vh"  alignItems="center" justifyContent="center">
       <Flex direction="column" background="gray.100" p={12} rounded={6} w='100%' maxW='3xl' alignItems="center" justifyContent="center" margin={"auto"}>
-        <ASCIIInput
-          key={"1"}
-          step={steps.steps[0]}
-        />
-        <Mq2
-          key={"Mq2"}
-          step={steps.steps[0]}
-        />
+        {expList(isMq)}
+        <Box>
+            <Button colorScheme='teal' height={"32px"} width={"88px"}onClick={()=>{setNext(true);setIsMq(isMq?false:true);}}>Enviar</Button>
+        </Box>
       </Flex>
     </Flex>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const pid  = await context.query.pid;
-
-  class ejercicio{
-      private e;
-      public setE(a){
-          this.e=a;
-      }
-      public getE(){
-          return this.e;
-      }
-  }
-
-  const ej= new ejercicio();
-  ej.setE(exp01);
-
-  return {
-    props: {steps:ej.getE()[0]}, // will be passed to the page component as props
-  }
-}
 
 export default Home
