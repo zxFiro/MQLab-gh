@@ -111,12 +111,10 @@ const MQPostfixparser = (MQinfixInput:string) => {
                     stack.push("prefixmark2");
                 }
             }
-            console.log(a[i],literal, cOp, stack, output);
         }
         while(stack.length>0){
             if("(".localeCompare(stack[stack.length-1])!=0) output=output+" "+stack.pop();
         }
-        console.log("output: "+output);
         return output;
     }
 

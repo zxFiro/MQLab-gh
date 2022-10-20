@@ -7,7 +7,7 @@ import MQPostfixSolver from './MQPostfixSolver';
 import MQPostfixparser from './MQPostfixparser';
 
 
-const AsciiInput =  ({step}) => {
+const AsciiInput =  ({step,setNext}) => {
 
     //Mq1
     const [latex, setLatex] = useState("");
@@ -41,6 +41,7 @@ const AsciiInput =  ({step}) => {
             setAlerta("success");
             setAlertaMSG("Has ingresado la expresion correctamente!.");
             setAlertaVisibility(false);
+            setNext(false);
         } else {
             setAlerta("error");
             setAlertaMSG("La expresion ingresada no es correcta.");
@@ -55,9 +56,6 @@ const AsciiInput =  ({step}) => {
     return (
         <>
             <VStack alignItems="center" justifyContent="center" margin={"auto"}>
-                <Box key={"1"} flex='1' textAlign='left'>
-                    {step.stepTitle} 
-                </Box>
                 <Box>
                     <MathComponent tex={step.expression} display={true} />
                 </Box>

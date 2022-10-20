@@ -5,7 +5,6 @@ const MQPostfixSolver = (MQPostfixExpression:string,ValuesObject:object[]) => {
         let l = values.length;
         let output=input;
         for (let i=0;i<l;i++) output=output.replaceAll(" "+values[i].name," "+values[i].value);
-        console.log("reemplazo: "+output)
         return output;
     }
 
@@ -56,7 +55,6 @@ const MQPostfixSolver = (MQPostfixExpression:string,ValuesObject:object[]) => {
                 }
             }
         }
-        console.log("stack: "+stack[0], exp,stack);
         return stack[0];
     }
 
