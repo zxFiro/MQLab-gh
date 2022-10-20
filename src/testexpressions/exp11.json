@@ -12,7 +12,7 @@
           {
             "stepId": "0",
             "KCs":[],
-            "expression": "\\left(a+b\right)\\cdot\\left(a^{2\\cdot b}-a\\right)",
+            "expression": "\\left(a+b\\right)\\cdot\\left(a^{2\\cdot b}-a\\right)",
             "stepTitle": "Escribe la siguiente expresion en el campo de entrada.",
             "displayResult": ["\\left(a+b\right)\\cdot\\left(a^{2\\cdot b}-a\\right)"],
             "values":[{"name":"a","value":1},{"name":"b","value":4}],

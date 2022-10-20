@@ -19,13 +19,11 @@ const Home: inicio = () => {
   }
   const [expL,setExpL]=useState(shuffledList());
 
-  const [expIndex,setExpIndex] = useState(parseInt("0"));
+  const [expIndex,setExpIndex] = useState(0);
 
   const expList = (mq2ev) => {
-    console.log(expL);
-    setExpIndex(expIndex+1);
-
-    if(mq2ev){
+    console.log("a",expL[expIndex].itemId,expL[expIndex].steps[0].expression);
+    if(mq2ev && expL!=undefined){
       return (
         <Mq2
           key={"Mq2"}
@@ -46,14 +44,23 @@ const Home: inicio = () => {
   } 
 
   const [isMq,setIsMq]=useState(true);
-  const [next,setNext]=useState(false);
 
   return (
     <Flex height="100vh"  alignItems="center" justifyContent="center">
       <Flex direction="column" background="gray.100" p={12} rounded={6} w='100%' maxW='3xl' alignItems="center" justifyContent="center" margin={"auto"}>
         {expList(isMq)}
         <Box>
-            <Button colorScheme='teal' height={"32px"} width={"88px"}onClick={()=>{setNext(true);setIsMq(isMq?false:true);}}>Enviar</Button>
+            <Button 
+              colorScheme='teal'
+              height={"32px"}
+              width={"88px"}
+              onClick={
+                ()=>{
+                  if(expIndex<14)setExpIndex(expIndex+1);
+                  setIsMq(isMq?false:true);
+                }
+              }
+            >Enviar</Button>
         </Box>
       </Flex>
     </Flex>
