@@ -11,17 +11,23 @@ const Home: inicio = () => {
     },
     { ssr: false }
   );
-  
+  /*
   const shuffledList = () => {
     let exprList = Expressions();
     exprList= exprList.sort(function(){return 0.5 - Math.random()});
+    return exprList;
+  }*/
+
+  const latinSquare = () => {
+    let exprList = Expressions(1);
     return exprList;
   }
 
   const [isMq,setIsMq]=useState(false);
   const [next,setNext]=useState(true);
 
-  const [expL,setExpL]=useState(shuffledList());
+  //const [expL,setExpL]=useState(shuffledList());
+  const [expL2,setExpL2]=useState(latinSquare());
   const [expIndex,setExpIndex] = useState(0);
 
   const expList = (mq2ev) => {
@@ -57,13 +63,48 @@ const Home: inicio = () => {
     return (
       <>nada</>
     )
+  }
+  
+  const expList2 = (mq2ev) => {
+    console.log("a",expL2);
+    
+    if(expL2[expIndex].input && expL2!=undefined){
+      return (
+        <>
+          <Box key={"tA"} flex='1' textAlign='left'>
+              {expL2[expIndex].exp.steps[0].stepTitle} 
+          </Box>
+          <Mq2
+            key={"Mq2"}
+            step={expL2[expIndex].exp.steps[0]}
+            setNext={setNext}
+          />
+        </>
+      )
+    } else {
+      return (
+        <>
+          <Box key={"tB"} flex='1' textAlign='left'>
+              {expL2[expIndex].exp.steps[0].stepTitle} 
+          </Box>
+          <ASCIIInput
+            key={"1"}
+            step={expL2[expIndex].exp.steps[0]}
+            setNext={setNext}
+          />
+        </>
+      )
+    }
+    return (
+      <>nada</>
+    )
   } 
 
   
   return (
     <Flex height="100vh"  alignItems="center" justifyContent="center">
       <Flex direction="column" background="gray.100" p={12} rounded={6} w='100%' maxW='3xl' alignItems="center" justifyContent="center" margin={"auto"}>
-        {expList(isMq)}
+        {expList2(isMq)}
         <Box p={4}>
             <Button
               colorScheme='teal'

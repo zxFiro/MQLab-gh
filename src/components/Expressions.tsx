@@ -14,17 +14,48 @@ import exp13 from "../testexpressions/exp13.json";
 import exp14 from "../testexpressions/exp14.json";
 import exp15 from "../testexpressions/exp15.json";
 
-const Expressions = () => {
-  const getExpressionList = ()=>{
-    let expressionList = [
-        exp01[0],exp02[0],exp03[0],exp04[0],exp05[0],
-        exp06[0],exp07[0],exp08[0],exp09[0],exp10[0],
-        exp11[0],exp12[0],exp13[0],exp14[0],exp15[0]
-    ];
-    return expressionList;
+const Expressions = (userIndex) => {
+
+  const latinSquareList = () => {
+    let easyL=[exp01[0],exp02[0],exp03[0],exp04[0]];
+    let mediumL=[exp06[0],exp07[0],exp08[0],exp09[0]];
+    let hardL=[exp11[0],exp12[0],exp13[0],exp14[0]];
+    let expAr=[easyL,mediumL,hardL];
+
+    let latinSquareL = [];
+    let latex=false;
+
+    for(let i=0; i<3;i++){
+      let tL=expAr[i];
+      for(let j=0;j<2;j++){
+        for(let k=0;k<4;k++){
+          let temp = [];
+          for(let m=0;m<4;m++){
+            temp.push({"exp":tL[m],"input":latex});
+            latex=latex?false:true;
+          }
+          tL.push(tL.shift());
+          latinSquareL.push(temp);
+          latex=latex?false:true;
+        }
+        latex=latex?false:true;
+      }
+    }
+
+    return latinSquareL;
   }
 
-  return getExpressionList();
+  const userLSL = (userIndex) => {
+    let userExpL =[];
+    let lSL=latinSquareList();
+
+    for(let i=0;i<24;i++){
+      userExpL.push(lSL[i][userIndex])
+    }
+    return userExpL;
+  }
+
+  return userLSL(userIndex);
 }
 
 export default Expressions
