@@ -1,0 +1,53 @@
+// schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Action {
+  id String @id @default(uuid())
+  inputType inputtype @default(OTHER)
+  view views @default(OTHER)
+  createdAt DateTime @default(now())
+  usertype Usergroup @default(A)
+  action actions @default(UNKOWN)
+  label String
+  expstep String
+  expression String
+  value String
+  success Boolean
+}
+
+enum Usergroup {
+  A
+  B
+  C
+  D
+}
+
+enum actions {
+  UNKOWN
+  PRESSEDKEY
+  PRESSEDBUTTON
+  RIGHTCLICK
+  MOUSEDOWN
+  FOCUS
+}
+
+enum inputtype {
+  MATHQUILL
+  ASCII
+  OTHER
+}
+
+enum views {
+  INTRO
+  EXPCOPY
+  EXCERCISE
+  STATS
+  OTHER
+}
