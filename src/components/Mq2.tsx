@@ -1,4 +1,4 @@
-import {Alert, AlertIcon,Button, Flex, Stack, Box, HStack, VStack} from '@chakra-ui/react';
+import {Alert, AlertIcon,Button, Flex, Stack, Box, HStack, VStack, Text} from '@chakra-ui/react';
 import {useRef,useState, useCallback,memo} from "react";
 import { addStyles, EditableMathField } from 'react-mathquill';
 import { MathComponent } from '../components/MathJax'
@@ -9,18 +9,21 @@ import MQPostfixparser from './MQPostfixparser';
 addStyles();
 
 
-const Mq2 =  ({step,setNext}) => {
+const Mq2 =  ({step,setNext,disablehint}) => {
     let entero= parseInt(step.stepId);
 
     //Mq1
-    const [latex, setLatex] = useState("\\text{Ingresa tu respuesta aqui}");
+    const [latex, setLatex] = useState("\\text{Ingresa la expresion aqui}");
     //inline style aprendido para componentes react en... https://codeburst.io/4-four-ways-to-style-react-components-ac6f323da822
     const EMFStyle ={
         width: "190px",
         maxHeight: "120px",
         marginBottom: "12px",
-        border: "3px solid #73AD21"
+        border: "3px solid #73AD21",
+        "z-index": 2
     }
+    const [placeholder,setPlaceholder] = useState(true);
+
     const [ta,setTa] = useState();
     const [btnTxt, setBtnTxt] = useState("");
     const refBtnTxt = useRef(btnTxt);
@@ -116,6 +119,28 @@ const Mq2 =  ({step,setNext}) => {
         if(ta!=undefined)ta.focus();
     }
 
+    const enabledhint = () => {
+        if(disablehint){
+            return (
+                <></>
+            )
+        }else{
+            return(
+                <Hint
+                hints={step.hints}
+                //stepId={ejercicio.stepId}
+                contentId={3}
+                stepId={step.stepId}
+                matchingError={step.matchingError}
+                response={["response1","response2"]}
+                itemTitle="Factor Común compuesto "
+                error={error}
+                setError={setError}
+                ></Hint>
+            )
+        }
+    }
+
     return (
         <>
             <VStack alignItems="center" justifyContent="center" margin={"auto"}>
@@ -136,7 +161,15 @@ const Mq2 =  ({step,setNext}) => {
                             key={"EMF"+entero}
                             latex={latex}
                             style={EMFStyle}
-                            onChange={(mathField) => {
+                            onMouseDown={
+                                ()=>{
+                                    if(placeholder){
+                                        setPlaceholder(false);
+                                        setLatex("");
+                                    }
+                                }
+                            }
+                            onChange={(mathField?) => {
                                 setLatex(()=>mathField.latex());
                                 refMQElement(mathField);
                                 }
@@ -155,17 +188,7 @@ const Mq2 =  ({step,setNext}) => {
                     <Box>
                         <Button colorScheme='teal' height={"32px"} width={"88px"}onClick={()=>{handleAnswer();}}>Enviar</Button>
                     </Box>
-                    <Hint
-                        hints={step.hints}
-                        //stepId={ejercicio.stepId}
-                        contentId={3}
-                        stepId={step.stepId}
-                        matchingError={step.matchingError}
-                        response={["response1","response2"]}
-                        itemTitle="Factor Común compuesto "
-                        error={error}
-                        setError={setError}
-                    ></Hint>
+                    {enabledhint()}
             </HStack>
             <Alert status={alerta} mt={2} hidden={alertaVisibility}>
                 <AlertIcon />

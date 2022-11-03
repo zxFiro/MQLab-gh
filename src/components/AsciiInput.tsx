@@ -1,8 +1,6 @@
 import {Alert, AlertIcon,Button, Flex, Stack, Box, HStack, VStack, Input} from '@chakra-ui/react';
 import {useRef,useState, useCallback,memo} from "react";
 import { MathComponent } from './MathJax'
-//se importa el componente hint desarrollado por Miguel Nahuelpan
-import Hint from "./Hint";
 import MQPostfixSolver from './MQPostfixSolver';
 import MQPostfixparser from './MQPostfixparser';
 
@@ -69,17 +67,6 @@ const AsciiInput =  ({step,setNext}) => {
                     <Box>
                         <Button colorScheme='teal' height={"32px"} width={"88px"}onClick={()=>{handleAnswer();}}>Enviar</Button>
                     </Box>
-                    <Hint
-                        hints={step.hints}
-                        //stepId={ejercicio.stepId}
-                        contentId={3}
-                        stepId={step.stepId}
-                        matchingError={step.matchingError}
-                        response={["response1","response2"]}
-                        itemTitle="Factor Común compuesto "
-                        error={error}
-                        setError={setError}
-                    ></Hint>
             </HStack>
             <Alert status={alerta} mt={2} hidden={alertaVisibility}>
                 <AlertIcon />

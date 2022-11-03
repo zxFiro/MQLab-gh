@@ -25,11 +25,9 @@ const stagea = () => {
   const [expIndex,setExpIndex] = useState(0);
 
   const expList2 = (mq2ev) => {
-    console.log("a",expL2);
-    
     if(expL2[expIndex].input && expL2!=undefined){
       return (
-        <HStack spacing='24px'>
+        <VStack spacing='24px'>
             <Box>
                 <Box key={"tA"} flex='1' textAlign='left'>
                     {expL2[expIndex].exp.steps[0].stepTitle} 
@@ -38,14 +36,15 @@ const stagea = () => {
                     key={"Mq2"}
                     step={expL2[expIndex].exp.steps[0]}
                     setNext={setNext}
+                    disablehint={true}
                 />
             </Box>
-        </HStack>
+            {ayudaMQ()}
+        </VStack>
       )
     } else {
       return (
-        <HStack spacing='24px'>
-            {ayudaAscii()}
+        <VStack spacing='24px'>
             <Box>
                 <Box key={"tB"} flex='1' textAlign='left'>
                     {expL2[expIndex].exp.steps[0].stepTitle} 
@@ -56,7 +55,8 @@ const stagea = () => {
                 setNext={setNext}
                 />
             </Box>
-        </HStack>
+            {ayudaAscii()}
+        </VStack>
       )
     }
     return (
@@ -77,15 +77,15 @@ const stagea = () => {
             <Alert status="info" w="100%" alignItems='top'>
             <AlertIcon />
                 <VStack>
-                <Heading>Definiciones ASCII</Heading>
+                <Heading size='m'>Ayudas para ingreso de operaciones</Heading>
                 <Box>
                     {itemValues.map(
                         (item,i) => (
-                            <HStack spacing='75px'>
-                                <Box w="100px">
+                            <HStack key={"AHSA"+i} spacing='75px'>
+                                <Box key={"AB1A"+i} w="100px">
                                     {item.colA}
                                 </Box>
-                                <Box w="100px">
+                                <Box key={"AB2A"+i} w="100px">
                                     {item.colB}
                                 </Box>
                             </HStack>
@@ -93,15 +93,15 @@ const stagea = () => {
                     )
                     }
                 </Box>
-                <Heading size='xs'>Importante el uso de parentesis</Heading>
+                <Heading size='m'>Importante el uso de parentesis</Heading>
                 <Box>
                     {ejemplos.map(
                         (item,i) => (
-                            <HStack spacing='75px'>
-                                <Box w="100px">
+                            <HStack key={"EHSA"+i} spacing='75px'>
+                                <Box key={"EB1A"+i} w="100px">
                                     {item.colA}
                                 </Box>
-                                <Box w="100px">
+                                <Box key={"EB2A"+i} w="100px">
                                     {item.colB}
                                 </Box>
                             </HStack>
@@ -114,6 +114,58 @@ const stagea = () => {
         </Box>
     )
   }
+
+  const ayudaMQ = ()=>{
+    let itemValues=[
+        {colA:"Suma",colB:"a+b"},{colA:"Resta",colB:"a-b"},{colA:"Multiplicacion",colB:"a*b"},
+        {colA:"Division",colB:"a/b"},{colA:"Exponente",colB:"a^b"},{colA:"Raiz cuadrada",colB:"raiz(b)"}
+    ]
+    let ejemplos=[
+        {colA:"Ejemplos",colB:""},{colA:"7-4+2=5",colB:"7-(4+2)=1"},{colA:"1^2*3=3",colB:"1^(2*3)=1"}
+    ]
+    return (
+        <Box>
+            <Alert status="info" w="100%" alignItems='top'>
+            <AlertIcon />
+                <VStack>
+                <Heading size='m'>Ayudas para ingreso de operaciones</Heading>
+                <Box>
+                    {itemValues.map(
+                        (item,i) => (
+                            <HStack key={"AHSB"+i} spacing='75px'>
+                                <Box key={"AB1B"+i} w="100px">
+                                    {item.colA}
+                                </Box>
+                                <Box key={"AB2B"+i} w="100px">
+                                    {item.colB}
+                                </Box>
+                            </HStack>
+                        )
+                    )
+                    }
+                </Box>
+                <Heading size='m'>Importante el uso de parentesis</Heading>
+                <Box>
+                    {ejemplos.map(
+                        (item,i) => (
+                            <HStack key={"EHSB"+i} spacing='75px'>
+                                <Box key={"EB1B"+i} w="100px">
+                                    {item.colA}
+                                </Box>
+                                <Box key={"EB2B"+i} w="100px">
+                                    {item.colB}
+                                </Box>
+                            </HStack>
+                        )
+                    )
+                    }
+                </Box>
+                </VStack>
+            </Alert>
+        </Box>
+    )
+  }
+
   
   return (
     <Flex height="100vh"  alignItems="center" justifyContent="center">
