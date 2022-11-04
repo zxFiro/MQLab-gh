@@ -9,7 +9,7 @@ import MQPostfixparser from './MQPostfixparser';
 addStyles();
 
 
-const Mq2 =  ({step,setNext,disablehint}) => {
+const Mq2 =  ({step,disablehint,setFail,setSubmit}) => {
     let entero= parseInt(step.stepId);
 
     //Mq1
@@ -19,8 +19,7 @@ const Mq2 =  ({step,setNext,disablehint}) => {
         width: "190px",
         maxHeight: "120px",
         marginBottom: "12px",
-        border: "3px solid #73AD21",
-        "z-index": 2
+        border: "3px solid #73AD21"
     }
     const [placeholder,setPlaceholder] = useState(true);
 
@@ -62,12 +61,14 @@ const Mq2 =  ({step,setNext,disablehint}) => {
             setAlerta("success");
             setAlertaMSG("Has ingresado la expresion correctamente!.");
             setAlertaVisibility(false);
-            setNext(false);
+            setFail(false);
         } else {
             setAlerta("error");
             setAlertaMSG("La expresion ingresada no es correcta.");
             setAlertaVisibility(false);
+            setFail(true);
         }
+        setSubmit(true);
     }
 
 

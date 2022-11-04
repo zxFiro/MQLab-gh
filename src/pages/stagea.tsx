@@ -3,68 +3,72 @@ import { useRouter } from 'next/router'
 import ASCIIInput from '../components/ASCIIInput'
 import dynamic from "next/dynamic";
 import Expressions from '../components/Expressions';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { syncBuiltinESMExports } from 'module';
 
 const stagea = () => {
-  const Mq2 = dynamic(
+    const Mq2 = dynamic(
     () => {
         return import("../components/Mq2");
     },
     { ssr: false }
-  );
+    );
 
-  const latinSquare = () => {
-    let exprList = Expressions(1);
+    const latinSquare = () => {
+    let exprList = Expressions(0);
     return exprList;
-  }
-
-  const [isMq,setIsMq]=useState(false);
-  const [next,setNext]=useState(true);
-
-  const [expL2,setExpL2]=useState(latinSquare());
-  const [expIndex,setExpIndex] = useState(0);
-
-  const expList2 = (mq2ev) => {
-    if(expL2[expIndex].input && expL2!=undefined){
-      return (
-        <VStack spacing='24px'>
-            <Box>
-                <Box key={"tA"} flex='1' textAlign='left'>
-                    {expL2[expIndex].exp.steps[0].stepTitle} 
-                </Box>
-                <Mq2
-                    key={"Mq2"}
-                    step={expL2[expIndex].exp.steps[0]}
-                    setNext={setNext}
-                    disablehint={true}
-                />
-            </Box>
-            {ayudaMQ()}
-        </VStack>
-      )
-    } else {
-      return (
-        <VStack spacing='24px'>
-            <Box>
-                <Box key={"tB"} flex='1' textAlign='left'>
-                    {expL2[expIndex].exp.steps[0].stepTitle} 
-                </Box>
-                <ASCIIInput
-                key={"1"}
-                step={expL2[expIndex].exp.steps[0]}
-                setNext={setNext}
-                />
-            </Box>
-            {ayudaAscii()}
-        </VStack>
-      )
     }
-    return (
-      <>nada</>
-    )
-  }
 
-  const ayudaAscii = ()=>{
+    const expL2 = useRef(latinSquare());
+    const expIndex = useRef(0);
+
+    const [fail,setFail] = useState(true);
+    const [submit,setSubmit] = useState(false);
+    const [failCounter,setFailCounter] = useState(0);
+
+    const expList2 = () => {
+        if(expL2.current[expIndex.current].input && expL2.current!=undefined){
+            return (
+            <VStack spacing='24px'>
+                <Box>
+                    <Box key={"tA"} flex='1' textAlign='left'>
+                        {expL2.current[expIndex.current].exp.steps[0].stepTitle} 
+                    </Box>
+                    <Mq2
+                        key={"Mq2"}
+                        step={expL2.current[expIndex.current].exp.steps[0]}
+                        disablehint={true}
+                        setFail={setFail}
+                        setSubmit={setSubmit}
+                    />
+                </Box>
+                {ayudaMQ()}
+            </VStack>
+            )
+        } else {
+            return (
+            <VStack spacing='24px'>
+                <Box>
+                    <Box key={"tB"} flex='1' textAlign='left'>
+                        {expL2.current[expIndex.current].exp.steps[0].stepTitle} 
+                    </Box>
+                    <ASCIIInput
+                    key={"1"}
+                    step={expL2.current[expIndex.current].exp.steps[0]}
+                    setFail={setFail}
+                    setSubmit={setSubmit}
+                    />
+                </Box>
+                {ayudaAscii()}
+            </VStack>
+            )
+        }
+        return (
+            <>nada</>
+        )
+    }
+
+    const ayudaAscii = ()=>{
     let itemValues=[
         {colA:"Suma",colB:"a+b"},{colA:"Resta",colB:"a-b"},{colA:"Multiplicacion",colB:"a*b"},
         {colA:"Division",colB:"a/b"},{colA:"Exponente",colB:"a^b"},{colA:"Raiz cuadrada",colB:"raiz(b)"}
@@ -113,9 +117,9 @@ const stagea = () => {
             </Alert>
         </Box>
     )
-  }
+    }
 
-  const ayudaMQ = ()=>{
+    const ayudaMQ = ()=>{
     let itemValues=[
         {colA:"Suma",colB:"a+b"},{colA:"Resta",colB:"a-b"},{colA:"Multiplicacion",colB:"a*b"},
         {colA:"Division",colB:"a/b"},{colA:"Exponente",colB:"a^b"},{colA:"Raiz cuadrada",colB:"raiz(b)"}
@@ -164,32 +168,66 @@ const stagea = () => {
             </Alert>
         </Box>
     )
-  }
+    }
+
+    const [currentTool,setCurrentTool] = useState(expList2());
+    const [startTimer,setStartTimer]=useState(false);
+    const [timerI,setTimerI]=useState(2);
+    
+    useEffect(
+    ()=>{
+        function sleep(ms) {
+            setTimeout(()=>transition(), ms);
+        }
+        function transition(){
+            setFail(true);
+            expIndex.current+=1;     
+            setFailCounter(0);
+            setCurrentTool(expList2());
+            setStartTimer(false);
+            console.log(timerI)
+        }
+
+        
+        function onSubmit(){
+            if (submit) {
+                console.log(failCounter);
+                if (failCounter>1 || !fail) {
+                    setTimerI(2);
+                    setStartTimer(true);
+                    let a = setInterval(()=>{
+                        if(timerI>0){
+                            setTimerI(timerI-1);
+                        } else {
+                            clearInterval(a);
+                        }
+                    },1000);
+                    sleep(2000);
+                } else {
+                    setFailCounter(failCounter+1);
+                }
+                setSubmit(false);
+            }
+        }
+        onSubmit();
+    },[submit]);
+
+    const timer = () => {
+        if (startTimer) {
+            return <Heading size='m'>Pasaremos a la siguiente expresion en {timerI} segundos.</Heading>
+        }
+        return (<></>);
+    }
 
   
-  return (
+    return (
     <Flex height="100vh"  alignItems="center" justifyContent="center">
-      <Flex direction="column" background="gray.100" p={12} rounded={6} w='100%' maxW='4xl' alignItems="center" justifyContent="center" margin={"auto"}>
-        {expList2(isMq)}
-        <Box p={4}>
-            <Button
-              colorScheme='teal'
-              height={"32px"}
-              width={"88px"}
-              onClick={
-                ()=>{
-                  if(expIndex<24)setExpIndex(expIndex+1);
-                  setIsMq(isMq?false:true);
-                  setNext(true);
-                }
-              }
-              isDisabled={next}
-              hidden={next}
-            >Siguiente</Button>
-        </Box>
-      </Flex>
+        <Flex direction="column" background="gray.100" p={12} rounded={6} w='100%' maxW='4xl' alignItems="center" justifyContent="center" margin={"auto"}>
+            {timer()}
+            {currentTool}
+        </Flex>
     </Flex>
-  )
+    )
 }
 
 

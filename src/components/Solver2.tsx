@@ -72,6 +72,7 @@ const Solver2 = ({steps}) => {
                 cantidadDePasos={cantidadDePasos}
                 setDefaultIndex={setDefaultIndex}
                 setResumen={setResumen}
+                disablehint={false}
             >
         </Mq2>
         )

@@ -5,7 +5,7 @@ import MQPostfixSolver from './MQPostfixSolver';
 import MQPostfixparser from './MQPostfixparser';
 
 
-const AsciiInput =  ({step,setNext}) => {
+const AsciiInput =  ({step,setFail,setSubmit}) => {
 
     //Mq1
     const [latex, setLatex] = useState("");
@@ -15,7 +15,6 @@ const AsciiInput =  ({step,setNext}) => {
     const [alertaMSG,setAlertaMSG] = useState("");
     const [alertaVisibility,setAlertaVisibility] = useState(true);
     
-    //hook de miguel definido para los hints
     const [error, setError] = useState(false); //true when the student enters an incorrect answers
 
     //la siguiente funcion maneja la respuesta ingresada, la respuesta se compara con el valor correspondiente almacenado en el ejercicio.json
@@ -39,12 +38,14 @@ const AsciiInput =  ({step,setNext}) => {
             setAlerta("success");
             setAlertaMSG("Has ingresado la expresion correctamente!.");
             setAlertaVisibility(false);
-            setNext(false);
+            setFail(false);
         } else {
             setAlerta("error");
             setAlertaMSG("La expresion ingresada no es correcta.");
             setAlertaVisibility(false);
+            setFail(true);
         }
+        setSubmit(true);
     }
 
     const handleChange=(e)=> {
