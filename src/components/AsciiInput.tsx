@@ -5,7 +5,7 @@ import MQPostfixSolver from './MQPostfixSolver';
 import MQPostfixparser from './MQPostfixparser';
 
 
-const AsciiInput =  ({step,setFail,setSubmit}) => {
+const AsciiInput =  ({step,setFail,setSubmit,setAns}) => {
 
     //Mq1
     const [latex, setLatex] = useState("");
@@ -50,6 +50,7 @@ const AsciiInput =  ({step,setFail,setSubmit}) => {
 
     const handleChange=(e)=> {
         setLatex(e.target.value)
+        setAns(latex);
     }
 
     return (

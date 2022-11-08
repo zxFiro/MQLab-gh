@@ -1,5 +1,5 @@
 import {Alert, AlertIcon,Button, Flex, Stack, Box, HStack, VStack, Text} from '@chakra-ui/react';
-import {useRef,useState, useCallback,memo} from "react";
+import {useRef,useState, useCallback,memo, useEffect} from "react";
 import { addStyles, EditableMathField } from 'react-mathquill';
 import { MathComponent } from '../components/MathJax'
 //se importa el componente hint desarrollado por Miguel Nahuelpan
@@ -9,17 +9,19 @@ import MQPostfixparser from './MQPostfixparser';
 addStyles();
 
 
-const Mq2 =  ({step,disablehint,setFail,setSubmit}) => {
+const Mq2 =  ({step,disablehint,setFail,setSubmit,setAns}) => {
     let entero= parseInt(step.stepId);
 
     //Mq1
     const [latex, setLatex] = useState("\\text{Ingresa la expresion aqui}");
+
     //inline style aprendido para componentes react en... https://codeburst.io/4-four-ways-to-style-react-components-ac6f323da822
     const EMFStyle ={
         width: "190px",
         maxHeight: "120px",
         marginBottom: "12px",
-        border: "3px solid #73AD21"
+        border: "3px solid #73AD21",
+        userSelect: "none"
     }
     const [placeholder,setPlaceholder] = useState(true);
 
@@ -173,12 +175,14 @@ const Mq2 =  ({step,disablehint,setFail,setSubmit}) => {
                             onChange={(mathField?) => {
                                 setLatex(()=>mathField.latex());
                                 refMQElement(mathField);
+                                setAns(latex);
                                 }
                             }
                             onBlur={(e)=>{
                                     something();
                                 }
                             }
+                            
                         >
                         </EditableMathField>
                         <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault(); if(ta!=undefined)ta.keystroke('Right');}} size='xs'>R</Button>

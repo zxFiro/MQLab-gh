@@ -1,10 +1,17 @@
+//UI tool
 import { Flex, Heading, Button,Box,HStack,Alert,AlertIcon,VStack} from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+//Normal input for math answer with ascii format
 import ASCIIInput from '../components/ASCIIInput'
+//Dynamic import for matquill wraper
 import dynamic from "next/dynamic";
 import Expressions from '../components/Expressions';
+//React elements to define states:
 import { useEffect, useRef, useState } from 'react';
-import { syncBuiltinESMExports } from 'module';
+//Following imports are utilized for sesion information persistence:
+import {useSnapshot } from 'valtio';
+import state,{setState} from "../components/Proxywvaltio";
+import localForage from "localforage";
 
 const stagea = () => {
     const Mq2 = dynamic(
@@ -26,6 +33,8 @@ const stagea = () => {
     const [submit,setSubmit] = useState(false);
     const [failCounter,setFailCounter] = useState(0);
 
+    const [ans,setAns]=useState("");
+
     const expList2 = () => {
         if(expL2.current[expIndex.current].input && expL2.current!=undefined){
             return (
@@ -40,6 +49,7 @@ const stagea = () => {
                         disablehint={true}
                         setFail={setFail}
                         setSubmit={setSubmit}
+                        setAns={setAns}
                     />
                 </Box>
                 {ayudaMQ()}
@@ -57,6 +67,7 @@ const stagea = () => {
                     step={expL2.current[expIndex.current].exp.steps[0]}
                     setFail={setFail}
                     setSubmit={setSubmit}
+                    setAns={setAns}
                     />
                 </Box>
                 {ayudaAscii()}
@@ -176,33 +187,28 @@ const stagea = () => {
     
     useEffect(
     ()=>{
-        function sleep(ms) {
-            setTimeout(()=>transition(), ms);
+        function sleep(func,ms) {
+            setTimeout(()=>func(), ms);
+        }
+        function countdown(){
+            let a = timerI-1;
+            setTimerI(a);
         }
         function transition(){
             setFail(true);
-            expIndex.current+=1;     
-            setFailCounter(0);
-            setCurrentTool(expList2());
             setStartTimer(false);
-            console.log(timerI)
+            setFailCounter(0);
+            expIndex.current+=1;
+            setTimerI(2)     
+            setCurrentTool(expList2());
         }
-
-        
         function onSubmit(){
             if (submit) {
                 console.log(failCounter);
                 if (failCounter>1 || !fail) {
-                    setTimerI(2);
                     setStartTimer(true);
-                    let a = setInterval(()=>{
-                        if(timerI>0){
-                            setTimerI(timerI-1);
-                        } else {
-                            clearInterval(a);
-                        }
-                    },1000);
-                    sleep(2000);
+                    sleep(countdown,1000);
+                    sleep(transition,2000);
                 } else {
                     setFailCounter(failCounter+1);
                 }
@@ -212,19 +218,46 @@ const stagea = () => {
         onSubmit();
     },[submit]);
 
-    const timer = () => {
-        if (startTimer) {
-            return <Heading size='m'>Pasaremos a la siguiente expresion en {timerI} segundos.</Heading>
-        }
-        return (<></>);
-    }
+    //con valtio
+    const snap = useSnapshot(state);
 
+    const [iv,setIv]=useState("");
+
+    useEffect(()=>{
+        localForage.getItem('wvaltio', function (err, value) {
+            // if err is non-null, we got an error. otherwise, value is the value
+            if (err==null) {
+                const foraging = value;
+                foraging!=undefined ?setIv(value) : setIv("inicial");
+            } else {
+                setIv("inicial")
+            }
+        });
+    },[]);
+
+    useEffect(
+        ()=>{
+            changeWvaltio(ans);
+        }
+    ,[ans]);
+
+    const changeWvaltio = (value) => {
+        //console.log(event.target.value)
+        setState(value);
+    }
   
     return (
     <Flex height="100vh"  alignItems="center" justifyContent="center">
         <Flex direction="column" background="gray.100" p={12} rounded={6} w='100%' maxW='4xl' alignItems="center" justifyContent="center" margin={"auto"}>
-            {timer()}
-            {currentTool}
+            <Box hidden={!startTimer}>
+                <Heading size='m'>Pasaremos a la siguiente expresion en {timerI} segundos.</Heading>
+            </Box>
+            <Box>
+                {currentTool}
+            </Box>
+            <Box>
+                <Button onClick={()=>{expIndex.current+=1;}}>aa</Button>
+            </Box>
         </Flex>
     </Flex>
     )

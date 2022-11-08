@@ -19,4 +19,14 @@ export const typeDefs = gql`
     type Query {
         actions: [Action]!
     }
+
+    type Mutation {
+        addAction(
+            label: String
+            expstep: String
+            expression: String
+            value: String
+            success: Boolean
+        ): Action
+    }
 `;
