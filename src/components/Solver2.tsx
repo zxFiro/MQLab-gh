@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useState,memo} from 'react';
+import { useState,memo, useEffect} from 'react';
 
 import { Flex, Box, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Heading, Alert,Text,AlertIcon,HStack,VStack} from '@chakra-ui/react'
 import { MathComponent } from '../components/MathJax'
@@ -7,7 +7,7 @@ import { MathComponent } from '../components/MathJax'
 //la siguiente linea se utiliza para el wraper del componente Mq, el cual usa la libreria JS mathquill
 import dynamic from "next/dynamic";
 
-const Solver2 = ({steps}) => {
+const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
     const Mq2 = dynamic(
         () => {
             return import("../components/Mq2");
@@ -67,16 +67,36 @@ const Solver2 = ({steps}) => {
         <Mq2 
                 key={"Mq2"+i}
                 step={step}
-                test={test}
-                setTest={setTest}
-                cantidadDePasos={cantidadDePasos}
-                setDefaultIndex={setDefaultIndex}
-                setResumen={setResumen}
                 disablehint={false}
+                setFail={setFail}
+                setSubmit={setSubmit}
+                setAns={setAns}
             >
         </Mq2>
         )
     )
+    useEffect(
+       ()=>{ 
+        if(submit){
+            console.log(submit);
+            if(!fail){
+                if(defaultIndex[0]<cantidadDePasos-1){
+                    let a=test;
+                    a[defaultIndex[0]].setStates({"disabled":false,"hidden":false,"answer":true});
+                    a[defaultIndex[0]+1].setStates({"disabled":false,"hidden":false,"answer":false});
+                    setTest(a);
+                    setDefaultIndex([defaultIndex[0]+1]);
+                } else {
+                    let a=test;
+                    a[defaultIndex[0]].setStates({"disabled":false,"hidden":false,"answer":true});
+                    setTest(a);
+                    setResumen(false)
+                }
+            }
+            setSubmit(false);
+        }
+    },[submit])
+
     const [pasos,setPasos]= useState(listaDePasos);
 
     return(
