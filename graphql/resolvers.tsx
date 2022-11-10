@@ -16,5 +16,22 @@ export const resolvers = {
         },
       })
     },
+    addUser: (_parent, args, ctx) => {
+      return ctx.prisma.user.create({
+        data: {
+          usertype:args.usertype,
+        },
+      })
+    },
+    updateUser: (_parent, args, ctx) => {
+      return ctx.prisma.user.update({
+        data: {
+          usertype:args.usertype,
+        },
+        where: {
+          id:args.id,
+        }
+      })
+    },
   },
 }
