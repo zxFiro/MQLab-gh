@@ -8,21 +8,34 @@ import ejercicio5 from "../tutor/potencias/potencias3.json";
 import ejercicio6 from "../tutor/potencias/potencias4.json";
 //react states
 import { useEffect, useRef, useState } from 'react';
+//persistence
+import localForage from "localforage";
+import {useSnapshot } from 'valtio';
+import state,{setState} from "../components/Proxywvaltio";
 
 const stageb = ({steps}) => {
     const [fail,setFail] = useState(true);
     const [submit,setSubmit] = useState(false);
     const [ans,setAns]=useState("");
 
+    const sol = () => {
+        return(
+            <Solver2 
+                steps={steps}
+                fail={fail}
+                submit={submit}
+                setFail={setFail}
+                setSubmit={setSubmit}
+                setAns={setAns}
+            ></Solver2>
+        )
+    }
+
     return (
-        <Solver2 
-            steps={steps}
-            fail={fail}
-            submit={submit}
-            setFail={setFail}
-            setSubmit={setSubmit}
-            setAns={setAns}
-        ></Solver2>
+        <>
+            <a>potato</a>
+            {sol()}
+        </>
     )
 }
 

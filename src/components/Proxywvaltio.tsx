@@ -1,10 +1,10 @@
 import localForage from "localforage";
 import {proxy} from 'valtio';
 
-const state = proxy(localForage.getItem('wvaltio')||{wvaltio: "incial"} );
+const state = proxy(localForage.getItem('MQlab'));
 
 export const setState = (newState) => {
-    localForage.setItem('wvaltio', newState)
+    localForage.setItem('MQlab', newState)
     state.wvaltio=newState;
 };
 

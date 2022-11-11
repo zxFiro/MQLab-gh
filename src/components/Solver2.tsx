@@ -7,7 +7,36 @@ import { MathComponent } from '../components/MathJax'
 //la siguiente linea se utiliza para el wraper del componente Mq, el cual usa la libreria JS mathquill
 import dynamic from "next/dynamic";
 
+//Following imports are utilized for sesion information persistence:
+import localForage from "localforage";
+import {useSnapshot } from 'valtio';
+import state,{setState} from "../components/Proxywvaltio";
+
 const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
+    //con valtio
+    const snap = useSnapshot(state);
+
+    const [iv,setIv]=useState();
+    const [uptFlag,setUptFlag]=useState(false);
+    const changeWvaltio = () => {
+        setState(iv);
+    }
+  
+    useEffect(()=>{
+            localForage.getItem('MQlab', function (err, value) {
+            console.log(err);
+            // if err is non-null, we got an error. otherwise, value is the value
+            if (err==null) {
+                const foraging = value;
+                foraging!=undefined ?setIv(value) : changeWvaltio();
+                setUptFlag(true);
+            } else {
+                //do something if error?
+            }
+        });
+    },[]);
+
+
     const Mq2 = dynamic(
         () => {
             return import("../components/Mq2");
@@ -71,6 +100,7 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
                 setFail={setFail}
                 setSubmit={setSubmit}
                 setAns={setAns}
+                fase={"EXCERCISE"}
             >
         </Mq2>
         )

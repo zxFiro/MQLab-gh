@@ -8,6 +8,11 @@ export const resolvers = {
     addAction: (_parent, args, ctx) => {
       return ctx.prisma.action.create({
         data: {
+          inputType:args.inputType,
+          view:args.view,
+          usertype:args.usertype,
+          action:args.action,
+          userId:args.userId,
           expression:args.expression,
           expstep:args.expstep,
           label:args.label,

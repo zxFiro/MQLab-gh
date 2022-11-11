@@ -9,11 +9,34 @@ import Expressions from '../components/Expressions';
 //React elements to define states:
 import { useEffect, useRef, useState } from 'react';
 //Following imports are utilized for sesion information persistence:
+import localForage from "localforage";
 import {useSnapshot } from 'valtio';
 import state,{setState} from "../components/Proxywvaltio";
-import localForage from "localforage";
 
 const stagea = () => {
+    //con valtio
+    const snap = useSnapshot(state);
+
+    const [iv,setIv]=useState();
+    const [uptFlag,setUptFlag]=useState(false);
+    const changeWvaltio = () => {
+        setState(iv);
+    }
+  
+    useEffect(()=>{
+            localForage.getItem('MQlab', function (err, value) {
+            console.log(err);
+            // if err is non-null, we got an error. otherwise, value is the value
+            if (err==null) {
+                const foraging = value;
+                foraging!=undefined ?setIv(value) : changeWvaltio();
+                setUptFlag(true);
+            } else {
+                //do something if error?
+            }
+        });
+    },[]);
+
     const Mq2 = dynamic(
     () => {
         return import("../components/Mq2");
@@ -22,11 +45,11 @@ const stagea = () => {
     );
 
     const latinSquare = () => {
-    let exprList = Expressions(0);
-    return exprList;
+        let exprList = Expressions(0);
+        return exprList;
     }
 
-    const expL2 = useRef(latinSquare());
+    const expL2 = useRef(Expressions(0));
     const expIndex = useRef(0);
 
     const [fail,setFail] = useState(true);
@@ -50,6 +73,7 @@ const stagea = () => {
                         setFail={setFail}
                         setSubmit={setSubmit}
                         setAns={setAns}
+                        fase={"EXPCOPY"}
                     />
                 </Box>
                 {ayudaMQ()}
@@ -185,6 +209,13 @@ const stagea = () => {
     const [startTimer,setStartTimer]=useState(false);
     const [timerI,setTimerI]=useState(2);
     
+    useEffect(()=>{
+    if(iv!=undefined&&uptFlag){
+        expL2.current=Expressions(iv.user.group);
+        if(iv.stagea.index>-1)expIndex.current=iv.stagea.index;
+        setCurrentTool(expList2())
+    }},[uptFlag])
+
     useEffect(
     ()=>{
         function sleep(func,ms) {
@@ -199,7 +230,11 @@ const stagea = () => {
             setStartTimer(false);
             setFailCounter(0);
             expIndex.current+=1;
-            setTimerI(2)     
+            let newiv = iv;
+            newiv.stagea={index:expIndex.current,value:-1};
+            setIv(newiv);
+            changeWvaltio();
+            setTimerI(2)
             setCurrentTool(expList2());
         }
         function onSubmit(){
@@ -218,34 +253,6 @@ const stagea = () => {
         onSubmit();
     },[submit]);
 
-    //con valtio
-    const snap = useSnapshot(state);
-
-    const [iv,setIv]=useState("");
-
-    useEffect(()=>{
-        localForage.getItem('wvaltio', function (err, value) {
-            // if err is non-null, we got an error. otherwise, value is the value
-            if (err==null) {
-                const foraging = value;
-                foraging!=undefined ?setIv(value) : setIv("inicial");
-            } else {
-                setIv("inicial")
-            }
-        });
-    },[]);
-
-    useEffect(
-        ()=>{
-            changeWvaltio(ans);
-        }
-    ,[ans]);
-
-    const changeWvaltio = (value) => {
-        //console.log(event.target.value)
-        setState(value);
-    }
-  
     return (
     <Flex height="100vh"  alignItems="center" justifyContent="center">
         <Flex direction="column" background="gray.100" p={12} rounded={6} w='100%' maxW='4xl' alignItems="center" justifyContent="center" margin={"auto"}>
@@ -254,9 +261,6 @@ const stagea = () => {
             </Box>
             <Box>
                 {currentTool}
-            </Box>
-            <Box>
-                <Button onClick={()=>{expIndex.current+=1;}}>aa</Button>
             </Box>
         </Flex>
     </Flex>

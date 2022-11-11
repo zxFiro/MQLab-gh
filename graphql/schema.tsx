@@ -32,6 +32,11 @@ export const typeDefs = gql`
 
     type Mutation {
         addAction(
+            inputType: String
+            view: String
+            usertype: String
+            action: String
+            userId: Int
             label: String
             expstep: String
             expression: String

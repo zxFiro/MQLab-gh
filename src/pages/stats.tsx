@@ -1,5 +1,11 @@
 import { Flex, Heading, Button,Box,HStack,Alert,AlertIcon,VStack} from '@chakra-ui/react'
 import { gql, useQuery , useMutation} from '@apollo/client'
+//persistence
+import localForage from "localforage";
+import {useSnapshot } from 'valtio';
+import state,{setState} from "../components/Proxywvaltio";
+//react states
+import { useState,useEffect } from 'react';
 const allActions = gql`
     query {
         actions {
@@ -70,10 +76,6 @@ const stats = () => {
     const [addUsr, { datau, loadingu, erroru }] = useMutation(addUser);
     const [updateUsr, { datauu, loadinguu, erroruu }] = useMutation(updateUser);
 
-    if (loading) return <p>Loading...</p>
-    if (error) return <p>Oh no... {error.message}</p>
-    if (loadingm) return 'Submitting...';
-    if (errorm) return `Submission error! ${errorm.message}`;
     if (loadingu) return 'Submitting...U';
     if (erroru) return `Submission errorU! ${erroru.message}`;
 
