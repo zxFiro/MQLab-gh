@@ -65,40 +65,44 @@ const Home: inicio = () => {
       {
         id:"e1",
         completed:false,
+        index:0,
         steps:[
-          {disabled:false,hidden:false,answer:true,value:""},
-          {disabled:false,hidden:false,answer:true,value:""},
-          {disabled:false,hidden:false,answer:true,value:""},
-          {disabled:false,hidden:false,answer:true,value:""},
-          {disabled:false,hidden:false,answer:true,value:""}
+          {disabled:false,hidden:false,answer:false,value:""},
+          {disabled:true,hidden:false,answer:false,value:""},
+          {disabled:true,hidden:false,answer:false,value:""},
+          {disabled:true,hidden:false,answer:false,value:""},
+          {disabled:true,hidden:false,answer:false,value:""}
         ]
       },
       {
         id:"e3",
         completed:false,
+        index:0,
         steps:[
-          {disabled:false,hidden:false,answer:true,value:""},
-          {disabled:false,hidden:false,answer:true,value:""},
-          {disabled:false,hidden:false,answer:true,value:""},
-          {disabled:false,hidden:false,answer:true,value:""},
-          {disabled:false,hidden:false,answer:true,value:""}
+          {disabled:false,hidden:false,answer:false,value:""},
+          {disabled:true,hidden:false,answer:false,value:""},
+          {disabled:true,hidden:false,answer:false,value:""},
+          {disabled:true,hidden:false,answer:false,value:""},
+          {disabled:true,hidden:false,answer:false,value:""}
         ]
       },
       {
         id:"e5",
         completed:false,
+        index:0,
         steps:[
-          {disabled:false,hidden:false,answer:true,value:""},
-          {disabled:false,hidden:false,answer:true,value:""},
-          {disabled:false,hidden:false,answer:true,value:""}
+          {disabled:false,hidden:false,answer:false,value:""},
+          {disabled:true,hidden:false,answer:false,value:""},
+          {disabled:true,hidden:false,answer:false,value:""}
         ]
       },
       {
         id:"e6",
         completed:false,
+        index:0,
         steps:[
-          {disabled:false,hidden:false,answer:true,value:""},
-          {disabled:false,hidden:false,answer:true,value:""}
+          {disabled:false,hidden:false,answer:false,value:""},
+          {disabled:true,hidden:false,answer:false,value:""}
         ]
       }
     ]   

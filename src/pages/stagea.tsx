@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from 'react';
 import localForage from "localforage";
 import {useSnapshot } from 'valtio';
 import state,{setState} from "../components/Proxywvaltio";
+import exp from 'constants';
 
 const stagea = () => {
     //con valtio
@@ -23,6 +24,8 @@ const stagea = () => {
         setState(iv);
     }
   
+    const router = useRouter();
+
     useEffect(()=>{
             localForage.getItem('MQlab', function (err, value) {
             console.log(err);
@@ -156,8 +159,8 @@ const stagea = () => {
 
     const ayudaMQ = ()=>{
     let itemValues=[
-        {colA:"Suma",colB:"a+b"},{colA:"Resta",colB:"a-b"},{colA:"Multiplicacion",colB:"a*b"},
-        {colA:"Division",colB:"a/b"},{colA:"Exponente",colB:"a^b"},{colA:"Raiz cuadrada",colB:"raiz(b)"}
+        {colA:"Suma",colB:"a+b"},{colA:"Resta",colB:"a-b"},{colA:"Multiplicacion",colB:"\\cdot a*b"},
+        {colA:"Division",colB:"\\frac o a/b"},{colA:"Exponente",colB:"a^b"},{colA:"Raiz cuadrada",colB:"\\sqrt"}
     ]
     let ejemplos=[
         {colA:"Ejemplos",colB:""},{colA:"7-4+2=5",colB:"7-(4+2)=1"},{colA:"1^2*3=3",colB:"1^(2*3)=1"}
@@ -226,16 +229,20 @@ const stagea = () => {
             setTimerI(a);
         }
         function transition(){
-            setFail(true);
-            setStartTimer(false);
-            setFailCounter(0);
-            expIndex.current+=1;
-            let newiv = iv;
-            newiv.stagea={index:expIndex.current,value:-1};
-            setIv(newiv);
-            changeWvaltio();
-            setTimerI(2)
-            setCurrentTool(expList2());
+            if(expIndex.current<23)
+            {
+                setFail(true);
+                setStartTimer(false);
+                setFailCounter(0);
+                expIndex.current+=1;
+                let newiv = iv;
+                newiv.stagea={index:expIndex.current,value:-1};
+                setIv(newiv);
+                changeWvaltio();
+                setTimerI(2)
+                setCurrentTool(expList2());
+                router.reload();
+            } else {router.push({pathname:"index"})}
         }
         function onSubmit(){
             if (submit) {

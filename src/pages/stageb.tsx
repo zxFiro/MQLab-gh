@@ -9,14 +9,13 @@ import ejercicio6 from "../tutor/potencias/potencias4.json";
 //react states
 import { useEffect, useRef, useState } from 'react';
 //persistence
-import localForage from "localforage";
-import {useSnapshot } from 'valtio';
-import state,{setState} from "../components/Proxywvaltio";
+import { useRouter } from 'next/router';
 
 const stageb = ({steps}) => {
     const [fail,setFail] = useState(true);
     const [submit,setSubmit] = useState(false);
     const [ans,setAns]=useState("");
+    const [fl,setFl]=useState(true);
 
     const sol = () => {
         return(

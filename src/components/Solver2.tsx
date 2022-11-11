@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useState,memo, useEffect} from 'react';
 
-import { Flex, Box, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Heading, Alert,Text,AlertIcon,HStack,VStack} from '@chakra-ui/react'
+import { Flex, Box, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Heading, Alert,Text,AlertIcon,HStack,VStack,Button} from '@chakra-ui/react'
 import { MathComponent } from '../components/MathJax'
 
 //la siguiente linea se utiliza para el wraper del componente Mq, el cual usa la libreria JS mathquill
@@ -21,20 +21,24 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
     const changeWvaltio = () => {
         setState(iv);
     }
-  
+
+    const[fl,setFl]=useState(false);
+
     useEffect(()=>{
-            localForage.getItem('MQlab', function (err, value) {
-            console.log(err);
-            // if err is non-null, we got an error. otherwise, value is the value
-            if (err==null) {
-                const foraging = value;
-                foraging!=undefined ?setIv(value) : changeWvaltio();
-                setUptFlag(true);
-            } else {
-                //do something if error?
-            }
+        localForage.getItem('MQlab', function (err, value) {
+        console.log(err);
+        // if err is non-null, we got an error. otherwise, value is the value
+        if (err==null) {
+            const foraging = value;
+            foraging!=undefined ?setIv(value) : changeWvaltio();
+            setUptFlag(true);
+            setFl(true);
+        } else {
+            //do something if error?
+        }
         });
     },[]);
+
 
 
     const Mq2 = dynamic(
@@ -81,7 +85,7 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
     const cantidadDePasos= steps.stepsQuantity;
 
     let potatoStates = [new passingPotato()];
-    potatoStates[0].setStates({"disabled":false,"hidden":false,"answer":""});
+    potatoStates[0].setStates({"disabled":false,"hidden":false,"answer":false});
 
     const [defaultIndex,setDefaultIndex]=useState([0]);
 
@@ -91,6 +95,26 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
     
     const [test,setTest] = useState(potatoStates);  
     const [resumen,setResumen]= useState(true);
+
+    const exn = {
+        "e1":0,
+        "e3":1,
+        "e5":2,
+        "e6":3
+    }
+
+    useEffect(()=>{
+    if(iv!=undefined&&uptFlag){
+        let civ=iv.stageb[exn[pid]].steps;
+        let l=civ.length;
+        let a=test;
+        for(let i=0;i<l;i++){
+            a[i].setStates(civ[i])
+        }
+        setTest(a);
+        setDefaultIndex([iv.stageb[exn[pid]].index]);
+    }},[uptFlag])
+
 
     const listaDePasos = steps.steps.map((step,i) => (
         <Mq2 
@@ -105,23 +129,30 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
         </Mq2>
         )
     )
+
+
     useEffect(
        ()=>{ 
+
         if(submit){
             console.log(submit);
             if(!fail){
+                let a=test;
+                console.log(defaultIndex[0])
+                a[defaultIndex[0]].setStates({disabled:false,hidden:false,answer:true,value:""});
+                let newiv = iv;
+                newiv.stageb[exn[pid]].steps[defaultIndex[0]]=defaultIndex[0];
                 if(defaultIndex[0]<cantidadDePasos-1){
-                    let a=test;
-                    a[defaultIndex[0]].setStates({"disabled":false,"hidden":false,"answer":true});
                     a[defaultIndex[0]+1].setStates({"disabled":false,"hidden":false,"answer":false});
-                    setTest(a);
+                    newiv.stageb[exn[pid]].steps[defaultIndex[0]+1]=a[defaultIndex[0]+1];
+                    newiv.stageb[exn[pid]].index=defaultIndex[0]+1
                     setDefaultIndex([defaultIndex[0]+1]);
                 } else {
-                    let a=test;
-                    a[defaultIndex[0]].setStates({"disabled":false,"hidden":false,"answer":true});
-                    setTest(a);
                     setResumen(false)
                 }
+                setIv(newiv);
+                changeWvaltio();
+                setTest(a);
             }
             setSubmit(false);
         }
@@ -195,6 +226,20 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
                                     )
                                 )
                             }
+                            <Button 
+                            colorScheme='teal'
+                            onClick={() => {
+                                function getKeyByValue(object, value) {
+                                    return Object.keys(object).find(key => object[key] === value);
+                                }
+                                let a=exn[pid]
+                                let b=getKeyByValue(exn,exn[pid]+1);
+                                if(a<3)router.push({pathname:"stageb",query:{pid:b},isReady:true}).then(() => router.reload())
+                                else router.push({pathname:"index"})
+                                
+                            }}>
+                                Siguiente
+                            </Button>
                         </VStack>
                     </Alert>
                 </Box>
