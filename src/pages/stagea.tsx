@@ -242,7 +242,7 @@ const stagea = () => {
                 setTimerI(2)
                 setCurrentTool(expList2());
                 router.reload();
-            } else {router.push({pathname:"index"})}
+            } else {router.push({pathname:"/"})}
         }
         function onSubmit(){
             if (submit) {

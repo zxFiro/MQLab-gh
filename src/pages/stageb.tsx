@@ -14,7 +14,6 @@ import { useRouter } from 'next/router';
 const stageb = ({steps}) => {
     const [fail,setFail] = useState(true);
     const [submit,setSubmit] = useState(false);
-    const [ans,setAns]=useState("");
     const [fl,setFl]=useState(true);
 
     const sol = () => {
@@ -25,14 +24,12 @@ const stageb = ({steps}) => {
                 submit={submit}
                 setFail={setFail}
                 setSubmit={setSubmit}
-                setAns={setAns}
             ></Solver2>
         )
     }
 
     return (
         <>
-            <a>potato</a>
             {sol()}
         </>
     )

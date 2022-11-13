@@ -54,7 +54,7 @@ const addAction = gql`
 `;
 
 
-const Mq2 =  ({step,disablehint,setFail,setSubmit,setAns,fase}) => {
+const Mq2 =  ({step,disablehint,setFail,setSubmit,setAns,fase,setDefaultIndex}) => {
     const [addAct, { datam, loadingm, errorm }] = useMutation(addAction);
     
     //con valtio
@@ -155,13 +155,16 @@ const Mq2 =  ({step,disablehint,setFail,setSubmit,setAns,fase}) => {
             setAlerta("success");
             setAlertaMSG("Has ingresado la expresion correctamente!.");
             setAlertaVisibility(false);
+            setAns(latex);
             setFail(false);
             testaction("PRESSEDBUTTON","submit","PRESSEDBUTTON",true,latex);
             setFC(true);
+            if(setDefaultIndex)setDefaultIndex([parseInt(step.stepId)+1])
         } else {
             setAlerta("error");
             setAlertaMSG("La expresion ingresada no es correcta.");
             setAlertaVisibility(false);
+            setError(true);
             setFail(true);
             testaction("PRESSEDBUTTON","submit","PRESSEDBUTTON",false,latex);
         }
@@ -188,7 +191,7 @@ const Mq2 =  ({step,disablehint,setFail,setSubmit,setAns,fase}) => {
         //review and redefine label value
         testaction(action,operation,action,false,latex);
     }
-    
+
     const clear = () =>{
         if(ta!=undefined)setLatex("");
         testaction("MOUSEDOWN","clear","MOUSEDOWN",false,latex);
@@ -263,9 +266,9 @@ const Mq2 =  ({step,disablehint,setFail,setSubmit,setAns,fase}) => {
                                     //if(placeholder){setLatex("\\text{Ingresa la expresion aqui}")}
                                     setLatex(()=>mathField.latex());
                                     refMQElement(mathField);
-                                    setAns(latex);
                                 }
                             }
+                            disabled={true}
                         >
                         </EditableMathField>
                         <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault(); if(ta!=undefined)ta.keystroke('Right');}} size='xs'>R</Button>

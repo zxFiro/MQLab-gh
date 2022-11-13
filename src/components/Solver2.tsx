@@ -12,7 +12,7 @@ import localForage from "localforage";
 import {useSnapshot } from 'valtio';
 import state,{setState} from "../components/Proxywvaltio";
 
-const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
+const Solver2 = ({steps,fail,submit,setFail,setSubmit}) => {
     //con valtio
     const snap = useSnapshot(state);
 
@@ -57,7 +57,8 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
         private states = {
             "disabled":true,
             "hidden":false,
-            "answer":false
+            "answer":false,
+            "value":""
         }
 
         private respuestaState;
@@ -85,7 +86,7 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
     const cantidadDePasos= steps.stepsQuantity;
 
     let potatoStates = [new passingPotato()];
-    potatoStates[0].setStates({"disabled":false,"hidden":false,"answer":false});
+    potatoStates[0].setStates({"disabled":false,"hidden":false,"answer":false,"value":""});
 
     const [defaultIndex,setDefaultIndex]=useState([0]);
 
@@ -115,6 +116,7 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
         setDefaultIndex([iv.stageb[exn[pid]].index]);
     }},[uptFlag])
 
+    const [ans,setAns]=useState("");
 
     const listaDePasos = steps.steps.map((step,i) => (
         <Mq2 
@@ -125,6 +127,7 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
                 setSubmit={setSubmit}
                 setAns={setAns}
                 fase={"EXCERCISE"}
+                setDefaultIndex={setDefaultIndex}
             >
         </Mq2>
         )
@@ -133,20 +136,17 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
 
     useEffect(
        ()=>{ 
-
         if(submit){
             console.log(submit);
             if(!fail){
                 let a=test;
-                console.log(defaultIndex[0])
-                a[defaultIndex[0]].setStates({disabled:false,hidden:false,answer:true,value:""});
+                a[defaultIndex[0]-1].setStates({disabled:false,hidden:false,answer:true,value:ans});
                 let newiv = iv;
-                newiv.stageb[exn[pid]].steps[defaultIndex[0]]=defaultIndex[0];
-                if(defaultIndex[0]<cantidadDePasos-1){
-                    a[defaultIndex[0]+1].setStates({"disabled":false,"hidden":false,"answer":false});
-                    newiv.stageb[exn[pid]].steps[defaultIndex[0]+1]=a[defaultIndex[0]+1];
-                    newiv.stageb[exn[pid]].index=defaultIndex[0]+1
-                    setDefaultIndex([defaultIndex[0]+1]);
+                newiv.stageb[exn[pid]].steps[defaultIndex[0]-1]=defaultIndex[0]-1;
+                if(defaultIndex[0]<cantidadDePasos){
+                    a[defaultIndex[0]].setStates({"disabled":false,"hidden":false,"answer":false,"value":""});
+                    newiv.stageb[exn[pid]].steps[defaultIndex[0]]=a[defaultIndex[0]];
+                    newiv.stageb[exn[pid]].index=defaultIndex[0]
                 } else {
                     setResumen(false)
                 }
@@ -159,6 +159,23 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
     },[submit])
 
     const [pasos,setPasos]= useState(listaDePasos);
+
+    const steporans = (step,i) => {
+        let a=test[parseInt(step.stepId)].getStates();
+        if(a.answer){
+            return(
+                <VStack alignItems="center" justifyContent="center" margin={"auto"}>
+                    <MathComponent
+                    key={"respuesta"+i}
+                    tex={a.value}
+                    display={true}
+                    />
+                </VStack>
+                );
+        }else{
+            return(pasos[i]);
+        }
+    }
 
     return(
         <Flex height="100vh"  alignItems="center" justifyContent="center" margin={"auto"}>
@@ -190,9 +207,11 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit,setAns}) => {
                             </AccordionButton>
                         </Alert>
                         </h2>
-                        <AccordionPanel key={"AIAccordionPanel"+i} pb={4}  >
+                        <AccordionPanel key={"AIAccordionPanel"+i} pb={4}>
                         {/*En el siguiente elemento es un estado que almacena el componente que maneja el paso del ejercicio correspondiente*/}
-                        {pasos[i]}
+                        {
+                            steporans(step,i)
+                        }
                         </AccordionPanel>
                     </AccordionItem>
                     ))
