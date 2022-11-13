@@ -175,13 +175,6 @@ const Mq2 =  ({step,disablehint,setFail,setSubmit,setAns,fase}) => {
         }
     }
     
-    const something = () => {
-        if(flag){
-            ta.cmd(btnTxt);
-            setFlag(()=>{return false})
-        }
-    }
-    
     const hope = (prop) => {
         refBtnTxt.current=prop;
         btnTxt:refBtnTxt.current;
@@ -189,34 +182,38 @@ const Mq2 =  ({step,disablehint,setFail,setSubmit,setAns,fase}) => {
         forceUpdate()
     }
 
-    //sin uso por efecto inesperado.
-    const parentesis = () =>{
-        setFlag(()=>{return true});
-        hope("(");
+    const MQtools = (operation,action,label) => {
+        if(ta!=undefined)ta.cmd(operation);
+        //action,value,label,success,inputvalue
+        //review and redefine label value
+        testaction(action,operation,action,false,latex);
+    }
+    
+    const lp = () =>{
+        if(ta!=undefined)ta.cmd("(");
+    }
+
+    const rp = () =>{
+        if(ta!=undefined)ta.cmd(")");
     }
 
     const fraccion = () =>{
-        setFlag(()=>{return true});
-        hope(()=>{return "\\frac"});
+        if(ta!=undefined)ta.cmd("\\frac");
         testaction("MOUSEDOWN","\\frac","MOUSEDOWN",false,latex);
     }
 
     const potencia = () =>{
-        setFlag(()=>{return true});
-        hope("^");
+        if(ta!=undefined)ta.cmd("^");
         testaction("MOUSEDOWN","^","MOUSEDOWN",false,latex);
     }
 
     const raiz = () =>{
-        setFlag(()=>{return true});
-        hope("\\sqrt");
+        if(ta!=undefined)ta.cmd("\\sqrt");
         testaction("MOUSEDOWN","\\sqrt","MOUSEDOWN",false,latex);
     }
 
     const clear = () =>{
-        setFlag(()=>{return true});
-        setLatex(()=>{return ""});
-        if(ta!=undefined)ta.focus();
+        if(ta!=undefined)setLatex("");
         testaction("MOUSEDOWN","clear","MOUSEDOWN",false,latex);
     }
 
@@ -257,10 +254,19 @@ const Mq2 =  ({step,disablehint,setFail,setSubmit,setAns,fase}) => {
                 <Box>
                     <Stack spacing={4} direction='row' align='center' pb={4}>
                         {/*importante la distincion de onMouseDown vs onClick, con el evento onMouseDown aun no se pierde el foco del input*/}
-                        <Button colorScheme='teal' onMouseDown={()=>{return fraccion()}}>/</Button>
-                        <Button colorScheme='teal' onMouseDown={()=>{return raiz()}}>√</Button>
-                        <Button colorScheme='teal' onMouseDown={()=>{return potencia()}}>^</Button>
-                        <Button colorScheme='teal' onClick={()=>{return clear()}}>C</Button>
+                        <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault();MQtools("(","MOUSEDOWN","MOUSEDOWN")}}>{"\("}</Button>
+                        <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault();MQtools(")","MOUSEDOWN","MOUSEDOWN")}}>{"\)"}</Button>
+                        <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault();MQtools("^","MOUSEDOWN","MOUSEDOWN")}}>^</Button>
+                        <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault();MQtools("\\sqrt","MOUSEDOWN","MOUSEDOWN")}}>√</Button>
+                    </Stack>
+                    <Stack spacing={4} direction='row' align='center' pb={4}>
+                        {/*importante la distincion de onMouseDown vs onClick, con el evento onMouseDown aun no se pierde el foco del input,
+                           Ademas con mousedown se puede usar preventDefault*/}
+                        <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault();MQtools("+","MOUSEDOWN","MOUSEDOWN")}}>+</Button>
+                        <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault();MQtools("-","MOUSEDOWN","MOUSEDOWN")}}>-</Button>
+                        <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault();MQtools("*","MOUSEDOWN","MOUSEDOWN")}}>*</Button>
+                        <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault();MQtools("\\frac","MOUSEDOWN","MOUSEDOWN")}}>/</Button>
+                        <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault();clear()}}>C</Button>
                     </Stack>
                     <HStack spacing='4px' alignItems="center" justifyContent="center" margin={"auto"}>
                         <Button colorScheme='teal' onMouseDown={(e)=>{e.preventDefault(); if(ta!=undefined)ta.keystroke('Left');}} size='xs'>L</Button>
@@ -281,10 +287,6 @@ const Mq2 =  ({step,disablehint,setFail,setSubmit,setAns,fase}) => {
                                     setLatex(()=>mathField.latex());
                                     refMQElement(mathField);
                                     setAns(latex);
-                                }
-                            }
-                            onBlur={(e)=>{
-                                    something();
                                 }
                             }
                         >
