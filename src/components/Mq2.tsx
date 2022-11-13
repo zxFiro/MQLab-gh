@@ -189,29 +189,6 @@ const Mq2 =  ({step,disablehint,setFail,setSubmit,setAns,fase}) => {
         testaction(action,operation,action,false,latex);
     }
     
-    const lp = () =>{
-        if(ta!=undefined)ta.cmd("(");
-    }
-
-    const rp = () =>{
-        if(ta!=undefined)ta.cmd(")");
-    }
-
-    const fraccion = () =>{
-        if(ta!=undefined)ta.cmd("\\frac");
-        testaction("MOUSEDOWN","\\frac","MOUSEDOWN",false,latex);
-    }
-
-    const potencia = () =>{
-        if(ta!=undefined)ta.cmd("^");
-        testaction("MOUSEDOWN","^","MOUSEDOWN",false,latex);
-    }
-
-    const raiz = () =>{
-        if(ta!=undefined)ta.cmd("\\sqrt");
-        testaction("MOUSEDOWN","\\sqrt","MOUSEDOWN",false,latex);
-    }
-
     const clear = () =>{
         if(ta!=undefined)setLatex("");
         testaction("MOUSEDOWN","clear","MOUSEDOWN",false,latex);
