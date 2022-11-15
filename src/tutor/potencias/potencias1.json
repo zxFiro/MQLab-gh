@@ -1,18 +1,13 @@
 [
     {
-        "itemId": "pot1",
-        "itemTitle": "Operatoria de potencias en expresiones algebraicas",
-        "KCs":[{"code":"NC", "label":"notacion cientifica"},{"code":"MULTD", "label":"multiplicacion de numeros decimales"},
-        {"code":"SREMB", "label":"suma/resta de exponentes en misma base."}],
-        "level": "1",
+        "code": "pot1",
+        "meta": {},
         "text": "Escriba las siguientes expresiones en notacion cientifica",
-        "selectSteps":false,
-        "stepsQuantity":5,
-        "expression": "0.000350\\cdot5000000\\cdot0.0004",
+        "type":"lvltutor",
         "steps": [
           {
             "stepId": "0",
-            "KCs":[{"code":"NC", "label":"notacion cientifica"}],
+            "KCs":["NC"],
             "expression": "0.000350\\cdot5000000\\cdot0.0004",
             "stepTitle": "Expresa cada factor en su notacion cientifica.",
             "displayResult": ["\\left(3.5\\right)\\cdot\\left(10^{-4}\\right)\\cdot\\left(5\\right)\\cdot\\left(10^{6}\\right)\\cdot\\left(4\\right)\\cdot\\left(10^{-4}\\right)"],
@@ -35,7 +30,7 @@
           },
           {
             "stepId": "1",
-            "KCs":[{"code":"MULTD", "label":"multiplicacion de numeros decimales"}],
+            "KCs":["AgrTerBase"],
             "expression": "\\left(3.5\\right)\\cdot\\left(10^{-4}\\right)\\cdot\\left(5\\right)\\cdot\\left(10^{6}\\right)\\cdot\\left(4\\right)\\cdot\\left(10^{-4}\\right)",
             "stepTitle": "Identifica los numeros decimales y luego multiplicalos, expresa el numero resultante multiplicando los numeros de misma base.",
             "displayResult": ["\\left(70\\right)\\cdot\\left(10^{-4}\\right)\\cdot\\left(10^{-4}\\right)\\cdot\\left(10^{6}\\right)"],
@@ -58,7 +53,7 @@
           },
           {
             "stepId": "2",
-            "KCs":[{"code":"SREMB", "label":"suma/resta de exponentes en misma base."}],
+            "KCs":["Mult","SumResExp"],
             "expression": "\\left(70\\right)\\cdot\\left(10^{-4}\\right)\\cdot\\left(10^{-4}\\right)\\cdot\\left(10^{6}\\right)",
             "stepTitle": "Realiza la suma de las potencias en base 10.",
             "displayResult": ["\\left(70\\right)\\cdot\\left(10^{-2}\\right)"],
@@ -81,7 +76,7 @@
           },
           {
             "stepId": "3",
-            "KCs":[{"code":"NC", "label":"notacion cientifica"}],
+            "KCs":["NC"],
             "expression": "\\left(70\\right)\\cdot\\left(10^{-2}\\right)",
             "stepTitle": "Expresa el numero 70 en su notacion cientifica.",
             "displayResult": ["\\left(7\\right)\\cdot\\left(10\\right)\\cdot\\left(10^{-2}\\right)"],
@@ -104,7 +99,7 @@
           },
           {
             "stepId": "4",
-            "KCs":[{"code":"SREMB", "label":"suma/resta de exponentes en misma base."}],
+            "KCs":["SumResExp"],
             "expression": "\\left(7\\right)\\cdot\\left(10\\right)\\cdot\\left(10^{-2}\\right)",
             "stepTitle": "Realiza la suma de las potencias en base 10.",
             "displayResult": ["\\left(7\\right)\\cdot\\left(10^{-1}\\right)"],

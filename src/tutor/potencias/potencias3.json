@@ -1,18 +1,13 @@
 [
     {
-        "itemId": "pot3",
-        "itemTitle": "Operatoria de potencias en expresiones algebraicas",
-        "KCs":[{"code":"MP", "label":"multiplicacion de potencias"},{"code":"INDEN", "label":"invierde denominador"},
-        {"code":"SREMB", "label":"suma/resta de exponentes en misma base"}],
-        "level": "1",
+        "code": "pot3",
+        "meta": {},
         "text": "Reduce la siguiente expresion:",
-        "selectSteps":false,
-        "stepsQuantity":3,
-        "expression": "\\frac{\\left(a^{b+3}\\cdot{d}^{b+2}\\right)^{3}}{a^{3\\cdot b}\\cdot{d}^{6}}",
+        "type":"lvltutor",
         "steps": [
           {
             "stepId": "0",
-            "KCs":[{"code":"MP", "label":"multiplicacion de potencias"}],
+            "KCs":["MultExp"],
             "expression": "\\frac{\\left(a^{b+3}\\cdot{d}^{b+2}\\right)^{3}}{a^{3\\cdot b}\\cdot{d}^{6}}",
             "stepTitle": "En el numerador realiza la multiplicación de potencias.",
             "displayResult": ["\\frac{a^{3\\cdot b+9}\\cdot{d}^{3\\cdot b+6}}{a^{3\\cdot b}\\cdot{d}^{6}}"],
@@ -36,7 +31,7 @@
           },
           {
             "stepId": "1",
-            "KCs":[{"code":"INDEN", "label":"invierde denominador"}],
+            "KCs":["SumResExp"],
             "expression": "\\frac{a^{3\\cdot b+9}\\cdot{d}^{3\\cdot b+6}}{a^{3\\cdot b}\\cdot{d}^{6}}",
             "stepTitle": "Invierte los factores en el denominador.",
             "displayResult": ["a^{3\\cdot b+9}\\cdot{d}^{3\\cdot b+6}\\cdot{a}^{-3\\cdot b}\\cdot{d}^{-6}"],
@@ -60,7 +55,7 @@
           },
           {
             "stepId": "2",
-            "KCs":[{"code":"SREMB", "label":"suma/resta de exponentes en misma base"}],
+            "KCs":["SumResExp"],
             "expression": "a^{3\\cdot b+9}\\cdot{d}^{3\\cdot b+6}\\cdot{a}^{-3\\cdot b}\\cdot{d}^{-6}",
             "stepTitle": "Realiza la suma/resta de potencias en cada factor de igual base.",
             "displayResult": ["a^{9}\\cdot{d}^{3\\cdot b}"],

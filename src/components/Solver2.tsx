@@ -83,7 +83,7 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit}) => {
         }
     }
 
-    const cantidadDePasos= steps.stepsQuantity;
+    const cantidadDePasos= steps.steps.length;
 
     let potatoStates = [new passingPotato()];
     potatoStates[0].setStates({"disabled":false,"hidden":false,"answer":false,"value":""});
@@ -181,9 +181,9 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit}) => {
         <Flex height="100vh"  alignItems="center" justifyContent="center" margin={"auto"}>
             <Flex direction="column" background="gray.100" p={12} rounded={6} w='100%' maxW='3xl' alignItems="center" justifyContent="center" margin={"auto"}>
                 <Heading as='h1' size='lg' noOfLines={1}>{pid}</Heading>
-                <Heading as='h1' size='lg' noOfLines={3}>{steps.itemTitle}</Heading>
+                <Heading as='h1' size='lg' noOfLines={3}>{"titulo de contedino en plataforma"}</Heading>
                 <Heading as='h5' size='sm' mt={2}>{steps.text}</Heading>
-                <MathComponent tex={steps.expression} display={true} />
+                <MathComponent tex={steps.steps[0].expression} display={true} />
                 <Accordion
                     onChange={(algo)=>setDefaultIndex(algo)}
                     index={defaultIndex}
@@ -229,7 +229,7 @@ const Solver2 = ({steps,fail,submit,setFail,setSubmit}) => {
                                     Expresión:
                                 </Text>
                                 <MathComponent
-                                        tex={steps.expression}
+                                        tex={steps.steps[0].expression}
                                         display={true}
                                 />
                             </HStack>

@@ -1,19 +1,13 @@
 [
     {
-        "itemId": "fracc1",
-        "itemTitle": "Operatoria de fracciones algebraicas",
-        "KCs":[{"code":"NOTDIV", "label":"notacion division"},{"code":"IND", "label":"identificar numerador/denominador"},
-        {"code":"NOTRAC", "label":"notacion racional"},{"code":"MF", "label":"multiplicacion de fracciones"},
-        {"code":"CANCELT", "label":"cancelacion de terminos semejantes"}],
-        "level": "1",
+        "code": "fracc1",
+        "meta": {},
         "text": "Reduce la siguiente expresion:",
-        "selectSteps":false,
-        "stepsQuantity":5,
-        "expression": "\\left(\\frac{a}{b}+\\frac{c}{d}\\right):\\left(\\frac{a}{b}-\\frac{c}{d}\\right)",
+        "type":"lvltutor",
         "steps": [
           {
             "stepId": "0",
-            "KCs":[{"code":"NOTDIV", "label":"notacion division"},{"code":"IND", "label":"identificar numerador/denominador"},{"code":"NOTRAC", "label":"notacion racional"}],
+            "KCs":["TransDivRac"],
             "expression": "\\left(\\frac{a}{b}+\\frac{c}{d}\\right):\\left(\\frac{a}{b}-\\frac{c}{d}\\right)",
             "stepTitle": "Expresa la siguiente division como una fraccion.",
             "displayResult": ["\\frac{\\left(\\frac{a}{b}+\\frac{c}{d}\\right)}{\\left(\\frac{a}{b}-\\frac{c}{d}\\right)}"],
@@ -37,7 +31,7 @@
           },
           {
             "stepId": "1",
-            "KCs":[{"code":"NOTRAC", "label":"notacion racional"},{"code":"IND", "label":"identificar numerador/denominador"}],
+            "KCs":["SRFrac","MCM"],
             "expression": "\\frac{\\left(\\frac{a}{b}+\\frac{c}{d}\\right)}{\\left(\\frac{a}{b}-\\frac{c}{d}\\right)}",
             "stepTitle": "Realiza la suma de fracciones en el numerador y expresa el resultado final del numerador.",
             "displayResult": ["\\left(\\frac{a\\cdot d+b\\cdot c}{b\\cdot d}\\right)"],
@@ -61,7 +55,7 @@
           },
           {
             "stepId": "2",
-            "KCs":[{"code":"NOTRAC", "label":"notacion racional"},{"code":"IND", "label":"identificar numerador/denominador"},{"code":"SRFRAC", "label":"suma/resta de fracciones"}],
+            "KCs":["SRFrac","MCM"],
             "expression": "\\frac{\\left(\\frac{a\\cdot d+b\\cdot c}{b\\cdot d}\\right)}{\\left(\\frac{a}{b}-\\frac{c}{d}\\right)}",
             "stepTitle": "Realiza la resta de fracciones en el denominador y expresa el resultado final del denominador.",
             "displayResult": ["\\left(\\frac{a\\cdot d-b\\cdot c}{b\\cdot d}\\right)"],
@@ -85,7 +79,7 @@
           },
           {
             "stepId": "3",
-            "KCs":[{"code":"SRFRAC", "label":"suma/resta de fracciones"},{"code":"DIVFRAC", "label":"division de fracciones"}],
+            "KCs":["DivFrac"],
             "expression": "\\frac{\\left(\\frac{a\\cdot d+b\\cdot c}{b\\cdot d}\\right)}{\\left(\\frac{a\\cdot d-b\\cdot c}{b\\cdot d}\\right)}",
             "stepTitle": "Invierte la fraccion ubiccada en el denominador, luego expresa como multiplicacion el resultado con el numerador.",
             "displayResult": ["\\left(\\frac{a\\cdot d+b\\cdot c}{b\\cdot d}\\right)\\cdot\\left(\\frac{b\\cdot d}{a\\cdot d-b\\cdot c}\\right)"],
@@ -109,7 +103,7 @@
           },
           {
             "stepId": "4",
-            "KCs":[{"code":"MF", "label":"multiplicacion de fracciones"},{"code":"CANCELT", "label":"cancelacion de terminos semejantes"}],
+            "KCs":["CancTermSem","MultFrac"],
             "expression": "\\left(\\frac{a\\cdot d+b\\cdot c}{b\\cdot d}\\right)\\cdot\\left(\\frac{b\\cdot d}{a\\cdot d-b\\cdot c}\\right)",
             "stepTitle": "Simplifica la siguiente expresion cancelando los terminos semejantes, luego multiplica ambas fracciones.",
             "displayResult": ["\\frac{a\\cdot d+b\\cdot c}{a\\cdot d-b\\cdot c}"],
