@@ -55,6 +55,7 @@ const MQPostfixSolver = (MQPostfixExpression:string,ValuesObject:object[]) => {
                 }
             }
         }
+        console.log(stack,"return: ",stack[0])
         return stack[0];
     }
 

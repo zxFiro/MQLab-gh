@@ -1,14 +1,25 @@
 const MQPostfixparser = (MQinfixInput:string) => {
+
+    //precedence and associativity defined by a table in https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence
+    //obtained at 2022/11/21 16:15 GMT-3
     const precedense = {
-        'sin':4,
-        'cos':4,
-        '^':3,
-        '\\um':3,
-        '\\sqrt':3,
-        '\\cdot':2,
-        '\\frac':2,
-        '+':1,
-        '-':1
+        'sin':17,
+        'cos':17,
+        '\\sqrt':17,
+        '\\um':14,
+        '^':13,
+        '\\cdot':12,
+        '\\frac':12,
+        '+':11,
+        '-':11
+    }
+
+    const associativity ={
+        '^':'right',
+        '\\cdot':'left',
+        '\\frac':'left',
+        '+':'left',
+        '-':'left'
     }
 
     //here we define the functions, but it can be expanded to other cases
@@ -46,6 +57,7 @@ const MQPostfixparser = (MQinfixInput:string) => {
         var alphabet = new RegExp(/^[a-zA-Z]$/);
         var number = new RegExp(/^[0-9.]$/);
         for (let i=0; i<l; i++){
+            console.log(stack);
             if (alphabet.test(a[i])) {
                 literal=literal+a[i];
                 if(i==(l-1)) output=output+" "+literal;
@@ -89,14 +101,23 @@ const MQPostfixparser = (MQinfixInput:string) => {
                     && (
                         precedense[stack[stack.length-1]]>precedense[cOp] //if the top operator has greater precedense
                         ||
-                        false //reserved same precedence and a[i] is left asociative
+                        ((precedense[stack[stack.length-1]]==precedense[cOp])
+                        &&
+                        (typeof associativity[a[i]]!="undefined"?(associativity[a[i]]=='left'):false)
+                        )
                     )
                     )output=output+" "+stack.pop();
                 stack.push(cOp);
             } else if (a[i].localeCompare("(")==0) {
                 if(stack.length>0){
-                    if ("\\frac".localeCompare(stack[stack.length-1])==0) stack.push("prefixmark1");
-                    if ("prefixmark2".localeCompare(stack[stack.length-1])==0) stack.pop();
+                    if ("\\frac".localeCompare(stack[stack.length-1])==0) {
+                        stack.pop();
+                        stack.push("prefixmark1");
+                    }
+                    if ("prefixmark2".localeCompare(stack[stack.length-1])==0) {
+                        stack.pop();
+                        stack.push("\\frac");
+                    };
                 }
                 stack.push("(");
             }else if (a[i].localeCompare(")")==0) {
