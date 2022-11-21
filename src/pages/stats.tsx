@@ -1,20 +1,30 @@
-import { Flex, Heading, Button,Box,HStack,Alert,AlertIcon,VStack} from '@chakra-ui/react'
+import { Flex, Heading, Button,Box,HStack,Wrap,WrapItem,Center} from '@chakra-ui/react'
 import { gql, useQuery , useMutation} from '@apollo/client'
-//persistence
-import localForage from "localforage";
-import {useSnapshot } from 'valtio';
-import state,{setState} from "../components/Proxywvaltio";
-//react states
-import { useState,useEffect } from 'react';
+import { MathComponent } from '../components/MathJax'
+import { useState } from 'react';
 const allActions = gql`
-    query {
-        actions {
+    query (
+        $value:String
+        $dmin:String
+        $dmax:String
+    ){
+        allActions(
+            dmin:$dmin
+            dmax:$dmax
+            value:$value
+        ) {
+            id
+            userId
             action
             createdAt
             expression
+            expstep
+            success
+            fixedSuccess
         }
     }
 `;
+
 
 const addAction = gql`
     mutation(
@@ -70,67 +80,115 @@ const updateUser = gql`
 
 `;
 
-const stats = () => {
-    const { data, loading, error } = useQuery(allActions)
-    const [addAct, { datam, loadingm, errorm }] = useMutation(addAction);
-    const [addUsr, { datau, loadingu, erroru }] = useMutation(addUser);
-    const [updateUsr, { datauu, loadinguu, erroruu }] = useMutation(updateUser);
+const fix = gql`
+        mutation(
+            $newsucc:String
+            $id:Int
+            ) {
+                fix(
+                    newsucc:$newsucc
+                    id:$id
+                ) {
+                    fixedSuccess
+                }
+            }
+`;
 
-    if (loadingu) return 'Submitting...U';
-    if (erroru) return `Submission errorU! ${erroru.message}`;
+const stats = () => {
+    const [fakePagination,setFakePagination] = useState(0);
+    
+    const dmin = new Date(1668428800000);
+    const dmax = new Date(1668459600000);
+    //1668726981000
+    //1668459600000
+    const [fixed, { datam, loadingm, errorm }] = useMutation(fix);
+    const { data, loading, error } = useQuery(allActions, { variables: { dmin:dmin,dmax:dmax,value:"submit"}})
+
+    if (loading) return 'load';
+    if (error) return `error! ${error.message}`;
+    if (loadingm) return 'mutating';
+    if (errorm) return `error! ${errorm.message}`;
+
+    const converdate=(date)=>{
+        let a = ""+new Date(date);
+        return a;
+    }
+
+    const wasSuccessfull=(success)=>{
+        if(success!="") return "repuesta correcta  "+success;
+        else return "respuesta incorrecta";
+    }
 
     const showRows = () => {
         return(
             <Box>
-                {data.actions.map( a => (
-                    <HStack>
+                {data.allActions.slice(0+fakePagination, 50+fakePagination).map( a => (
+                    <HStack spacing='24px'>
+                        <Box>{a.id}</Box>
+                        <Box>{a.userId}</Box>
                         <Box>{a.action}</Box>
-                        <Box>{a.createdAt}</Box>
-                        <Box>{a.expression}</Box>
+                        <Wrap margin={"auto"}>
+                            <WrapItem>
+                                <Center w='180px' h='80px'>
+                                    {converdate(parseInt(a.createdAt))}
+                                </Center>
+                            </WrapItem>
+                        </Wrap>
+                        <Box w='300px'>{<MathComponent tex={a.expression} display={true} />}</Box>
+                        <Box w='180px'>{wasSuccessfull(a.success)}</Box>
+                        <Box>{<MathComponent tex={a.expstep} display={true} />}</Box>
                     </HStack>
                 ))}
             </Box>
         )
     }
 
-    const testaction = () => {
-        addAct({
-            variables: {
-                    expression:"a+b",
-                    expstep:"exp",
-                    label:"aa",
-                    success:false,
-                    value:"aa",
-        }})
-    }
-    const testuser = async () => {
-        var a = await addUsr({variables:{usertype:"B"}});
-        var b = a.data.addUser.id
-        var ut = {
-            0:"A",
-            1:"B",
-            2:"C",
-            3:"D"
-        }
-        var c=ut[b%4]
-        await updateUsr({variables:{id:b,usertype:c}});
-    }
-
     return(
         <Flex height="100vh"  alignItems="center" justifyContent="center">
             <Flex direction="column" background="gray.100" p={12} rounded={6} w='100%' maxW='4xl' alignItems="center" justifyContent="center" margin={"auto"}>
-                {
-                    showRows()
-                }
+                <Box>
+                    {data.allActions.slice(0+fakePagination, 50+fakePagination).map( a => (
+                        <HStack spacing='24px'>
+                            <Box>{a.id}</Box>
+                            <Box>{a.userId}</Box>
+                            <Box>{a.action}</Box>
+                            <Wrap margin={"auto"}>
+                                <WrapItem>
+                                    <Center w='180px' h='80px'>
+                                        {converdate(parseInt(a.createdAt))}
+                                    </Center>
+                                </WrapItem>
+                            </Wrap>
+                            <Box w='300px'>{<MathComponent tex={a.expression} display={true} />}</Box>
+                            <Box w='180px'>{wasSuccessfull(a.success)}</Box>
+                            <Box>{<MathComponent tex={a.expstep} display={true} />}</Box>
+                            <Box>{a.fixedSuccess}</Box>
+                            <Box>
+                                <Button 
+                                colorScheme='teal'
+                                onClick={
+                                    async ()=>{
+                                        await fixed({variables:{id:a.id,newsucc:"true"}})
+                                    }}
+                                >correcta</Button>
+                            </Box>
+                            <Box>
+                                <Button 
+                                colorScheme='teal'
+                                onClick={
+                                    async ()=>{
+                                        await fixed({variables:{id:a.id,newsucc:"false"}})
+                                    }}
+                                >incorrecta</Button>
+                            </Box>
+                        </HStack>
+                    ))}
+                </Box>
                 <Button 
                     colorScheme='teal'
                     height={"32px"}
                     width={"88px"}
-                    onClick={
-                        ()=>{
-                            testuser();
-                        }
-                    }
+                    onClick={()=>{if(fakePagination<data.allActions.length-50)setFakePagination(fakePagination+50);else setFakePagination(data.allActions.length-50)}}
                 >Enviar</Button>
             </Flex>
         </Flex>

@@ -1,7 +1,14 @@
 export const resolvers = {
   Query: {
-    actions: (_parent, _args, ctx) => {
-      return ctx.prisma.action.findMany()
+    allActions: (_parent, _args, ctx) => {
+      return ctx.prisma.action.findMany(
+        {where: {
+          createdAt:{gte:_args.dmin,lte:_args.dmax},
+          value:{equals:_args.value,},
+        },orderBy: [
+          {id:'asc'}],
+        }
+      )
     },
   },
   Mutation: {
@@ -34,6 +41,16 @@ export const resolvers = {
           usertype:args.usertype,
         },
         where: {
+          id:args.id,
+        }
+      })
+    },
+    fix: (_parent, args, ctx) => {
+      return ctx.prisma.action.update({
+        data:{
+          fixedSuccess:args.newsucc,
+        },
+        where:{
           id:args.id,
         }
       })

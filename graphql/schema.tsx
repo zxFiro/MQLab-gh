@@ -15,6 +15,7 @@ export const typeDefs = gql`
         expression: String
         value: String
         success: Boolean
+        fixedSuccess: String
     }
     type User {
         id: Int
@@ -27,7 +28,7 @@ export const typeDefs = gql`
 
 
     type Query {
-        actions: [Action]!
+        allActions(dmin:String dmax:String value:String): [Action]!
     }
 
     type Mutation {
@@ -50,5 +51,9 @@ export const typeDefs = gql`
     }
     type Mutation {
         updateUser(id:Int usertype:String): User
+    }
+
+    type Mutation {
+        fix(id:Int newsucc:String): Action
     }
 `;
