@@ -20,15 +20,15 @@ const MQPostfixSolver = (MQPostfixExpression:string,ValuesObject:object[]) => {
             } else if(number.test(exp[i])){
                 stack.push(parseFloat(exp[i]));
             } else {
-                if(exp[i].localeCompare("\\frac")==0 || exp[i].localeCompare("/")==0){
+                if(exp[i].localeCompare("/")==0){
                     let a = stack.pop();
                     let b = stack.pop();
                     stack.push(b/a);
-                } else if (exp[i].localeCompare("\\cdot")==0 || exp[i].localeCompare("*")==0) {
+                } else if (exp[i].localeCompare("*")==0) {
                     let a = stack.pop();
                     let b = stack.pop();
                     stack.push(b*a);
-                } else if (exp[i].localeCompare("\\sqrt")==0 ) {
+                } else if (exp[i].localeCompare("sqrt")==0 ) {
                     let a = stack.pop();
                     stack.push(Math.sqrt(a));
                 } else if (exp[i].localeCompare("sin")==0 ) {

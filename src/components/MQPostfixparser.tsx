@@ -5,26 +5,26 @@ const MQPostfixparser = (MQinfixInput:string) => {
     const precedense = {
         'sin':17,
         'cos':17,
-        '\\sqrt':17,
+        'sqrt':17,
         '\\um':14,
         '^':13,
-        '\\cdot':12,
-        '\\frac':12,
+        '*':12,
+        '/':12,
         '+':11,
         '-':11
     }
 
     const associativity ={
         '^':'right',
-        '\\cdot':'left',
-        '\\frac':'left',
+        '*':'left',
+        '/':'left',
         '+':'left',
         '-':'left'
     }
 
     //here we define the functions, but it can be expanded to other cases
     const reservedWords = {
-        "\\sqrt":'sqrt',
+        "sqrt":'sqrt',
         "sin":'sin',
         "cos":'cos'
     }
@@ -34,19 +34,109 @@ const MQPostfixparser = (MQinfixInput:string) => {
         '*':'*',
         '/':'/',
         '+':'+',
-        '-':'-',
-        '\\cdot':'*',
-        '\\frac':'/',
+        '-':'-'
     }
-    const replaceAt = (word,index, replacement) => {
-        return word.substring(0, index) + replacement + word.substring(index + replacement.length);
+    const replaceAt = (word,min, max,replacement) => {
+        let fv=word.substring(0, min) + replacement + word.substring(max);
+        return fv;
     }
 
-    const MQinfixToPostfix = (a:string) => {
+    //method to add multiplications where regular notation assumes so,
+    //example 1 : aa => a*a, example 2 : 3a => 3*a, example 3: (a)(a)=> (a)*(a), example 4: a(a)=> a*(a)
+    const lazymath = (word)=>{
+        let a=word;
+        let l=a.length;
+        let literal="";
+        var alphabet = new RegExp(/^[a-zA-Z]$/);
+        var number = new RegExp(/^[0-9.]$/);
+        let replacePositions=[];
+        for (let i=0; i<l; i++){
+            if (alphabet.test(a[i])) {
+                literal=literal+a[i];
+                if(i==(l-1)) replacePositions.push({i:i+1,lit:literal})
+                if((i-1)>0) {if(a[i-1].localeCompare(")")==0 || number.test(a[i-1])) replacePositions.push({i:i,lit:" "});};
+                if((i+1)<l) {if(a[i+1].localeCompare("(")==0 || number.test(a[i+1])) replacePositions.push({i:i+1,lit:" "});};
+            } else if (typeof reservedWords[literal]!="undefined") {
+                literal="";
+            } else {
+                if(literal.length>1) replacePositions.push({i:i,lit:literal})
+                literal="";
+            }
+        }
+        let acc=0;
+        for (let i=0; i<replacePositions.length;i++) {
+            let lit=replacePositions[i].lit;
+            if(lit.localeCompare(" ")!=0){
+                let llit=lit.length;
+                let litAr=lit.split("");
+                lit=litAr[0]
+                for(let j=1; j<litAr.length;j++)lit=lit+"*"+litAr[j];
+                a=replaceAt(a,replacePositions[i].i-llit+acc,replacePositions[i].i+acc,lit);
+                acc=acc+litAr.length-1;
+            } else {
+                a=replaceAt(a,replacePositions[i].i+acc,replacePositions[i].i+acc,"*");
+                acc=acc+1;
+            }
+        }
+        return a;
+    }
+
+    //method to transform a word with fraction on latex notation to infix notation with /
+    const fracctoInfix= (a)=>{
+        let word=a;
+        let l=word.length;
+        let literal="";
+        var alphabet = new RegExp(/^[a-zA-Z]$/);
+        let stack=[];
+        let replacePositions=[];
+        //stack 1:first mark, 2:second mark, 18: (, 19: )
+        for (let i=0; i<l; i++){
+            if (alphabet.test(word[i])) {
+                literal=literal+word[i];
+            } else if ("\\".localeCompare(word[i])==0) {
+                literal="\\";
+            } else if (literal.localeCompare("\\frac")==0) {
+                stack.push(1);
+                literal="";
+            } else if (typeof reservedWords[literal]!="undefined") {
+                literal="";
+            } else {
+                literal="";
+            }
+            if (word[i].localeCompare("(")==0){
+                if(stack[stack.length-1]==2){
+                    stack.pop();
+                    replacePositions.push(i);
+                }
+                if(stack[stack.length-1]==1){
+                    stack.pop();
+                    stack.push(2);
+                }
+                stack.push(18);
+            }
+            if (word[i].localeCompare(")")==0){
+                while(18!=stack[stack.length-1]) if(stack.length>0) stack.pop();
+                if (stack.length>0 && 18==stack[stack.length-1]) stack.pop();
+            }
+        }
+        for (let i=0; i<replacePositions.length;i++) word=replaceAt(word,replacePositions[i]+i,replacePositions[i]+i+1,"/(");
+        word=word.replace(/\\frac/g,"");
+        return word;
+    }
+
+    const MQinfixToPostfix = (word:string) => {
+        var a=word;
         a=a.replace(/\\right\)/g,")");
         a=a.replace(/\\left\(/g,"(");
         a=a.replace(/}/g,")");
         a=a.replace(/{/g,"(");
+        a=a.replace(/\\cdot/g,"*");
+        a=a.replace(/\\sqrt/g,"sqrt");
+        if(a.search("frac")!=-1) a=fracctoInfix(a);
+        console.log(1,a);
+        a=lazymath(a);
+        console.log(2,a);
+        a=a.replace(/\)\(/g,")*(");
         var l=a.length;
         var literal="";
         var numeric="";
@@ -57,7 +147,6 @@ const MQPostfixparser = (MQinfixInput:string) => {
         var alphabet = new RegExp(/^[a-zA-Z]$/);
         var number = new RegExp(/^[0-9.]$/);
         for (let i=0; i<l; i++){
-            console.log(stack);
             if (alphabet.test(a[i])) {
                 literal=literal+a[i];
                 if(i==(l-1)) output=output+" "+literal;
@@ -65,9 +154,6 @@ const MQPostfixparser = (MQinfixInput:string) => {
                 //if the literal word formed is a function push into operator stack
                 stack.push(literal);
                 literal="";
-            } else if (a[i].localeCompare("\\")==0){
-                if (literal.length>0) output=output+" "+literal;
-                literal="\\";
             } else {
                 //if the literal word is not a function add it to the output
                 if (literal.length>0 && typeof operator[literal]=="undefined"){
@@ -109,16 +195,6 @@ const MQPostfixparser = (MQinfixInput:string) => {
                     )output=output+" "+stack.pop();
                 stack.push(cOp);
             } else if (a[i].localeCompare("(")==0) {
-                if(stack.length>0){
-                    if ("\\frac".localeCompare(stack[stack.length-1])==0) {
-                        stack.pop();
-                        stack.push("prefixmark1");
-                    }
-                    if ("prefixmark2".localeCompare(stack[stack.length-1])==0) {
-                        stack.pop();
-                        stack.push("\\frac");
-                    };
-                }
                 stack.push("(");
             }else if (a[i].localeCompare(")")==0) {
                 while("(".localeCompare(stack[stack.length-1])!=0) //if the top operator is not 
@@ -127,10 +203,6 @@ const MQPostfixparser = (MQinfixInput:string) => {
                 }
                 if (stack.length>0 && "(".localeCompare(stack[stack.length-1])==0) stack.pop();
                 if (stack.length>0 && typeof reservedWords[stack[stack.length-1]]!="undefined") output=output+" "+stack.pop();
-                if (stack.length>0 && "prefixmark1".localeCompare(stack[stack.length-1])==0){
-                    stack.pop();
-                    stack.push("prefixmark2");
-                }
             }
         }
         while(stack.length>0){
