@@ -54,16 +54,24 @@ const MQPostfixparser = (MQinfixInput:string) => {
             if (alphabet.test(a[i])) {
                 literal=literal+a[i];
                 if(i==(l-1)) replacePositions.push({i:i+1,lit:literal})
-                if((i-1)>0) {if(a[i-1].localeCompare(")")==0 || number.test(a[i-1])) replacePositions.push({i:i,lit:" "});};
-                if((i+1)<l) {if(a[i+1].localeCompare("(")==0 || number.test(a[i+1])) replacePositions.push({i:i+1,lit:" "});};
+                if((i-1)>-1) {if(number.test(a[i-1])) replacePositions.push({i:i,lit:" "});};
+                if((i+1)<l) {if(number.test(a[i+1])) replacePositions.push({i:i+1,lit:" "});};
             } else if (typeof reservedWords[literal]!="undefined") {
                 literal="";
             } else {
                 if(literal.length>1) replacePositions.push({i:i,lit:literal})
                 literal="";
             }
+            if (a[i].localeCompare("(")==0) {
+                if((i-1)>-1) {if(number.test(a[i-1])||alphabet.test(a[i-1])) replacePositions.push({i:i,lit:" "});};
+                
+            }
+            if (a[i].localeCompare(")")==0) {
+                if((i+1)<l) {if(number.test(a[i+1])||alphabet.test(a[i+1])) replacePositions.push({i:i+1,lit:" "});};
+            }
         }
         let acc=0;
+        console.log(replacePositions);
         for (let i=0; i<replacePositions.length;i++) {
             let lit=replacePositions[i].lit;
             if(lit.localeCompare(" ")!=0){
